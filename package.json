@@ -1,0 +1,27 @@
+{
+  "name": "hmu-nug",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "start": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@auth0/auth0-react": "^1.10.2",
+    "antd": "^4.21.5",
+    "@ant-design/icons": "latest",
+    "hump": "^0.0.4",
+    "lodash": "^4.17.21",
+    "react": "^18.0.0",
+    "react-component-export-image": "^1.0.6",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@vitejs/plugin-react": "^1.3.0",
+    "typescript": "^4.6.3",
+    "vite": "^2.9.9"
+  }
+}
