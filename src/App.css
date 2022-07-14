@@ -34,3 +34,12 @@
 button {
   font-size: calc(10px + 2vmin);
 }
+
+.ticket {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+}
