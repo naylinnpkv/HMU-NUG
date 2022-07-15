@@ -20,6 +20,7 @@ export const Home = () => {
         <Button
           type="primary"
           size="middle"
+          disabled
           shape="round"
           style={{
             background: "wheat",

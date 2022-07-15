@@ -35,7 +35,7 @@ button {
   font-size: calc(10px + 2vmin);
 }
 
-.ticket {
+.ticket-button {
   display: flex;
   flex-direction: column;
   justify-content: center;
