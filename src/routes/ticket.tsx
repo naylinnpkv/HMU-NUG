@@ -1,4 +1,4 @@
-import Raffle from "../statics/raffle.svg";
+import Raffle from "../statics/raffle.jpg";
 import {
   exportComponentAsJPEG,
   exportComponentAsPDF,
@@ -12,9 +12,11 @@ export const Ticket = () => {
   const printRef = useRef<HTMLDivElement>(null);
   return (
     <>
-      <div className="ticket-container" ref={printRef}>
+      <div className="ticket-container">
         <div className="head-image">
-          <img src={Raffle} alt="Raffle" className="ticket" />
+          <div ref={printRef}>
+            <img src={Raffle} alt="Raffle" className="ticket" />
+          </div>
         </div>
         <div className="text-on-image">
           <p>{`Ticket Number:${ticketNumber}`}</p>
