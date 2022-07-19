@@ -1,0 +1,33 @@
+@import url("https://fonts.googleapis.com/css2?family=Ibarra+Real+Nova&display=swap");
+.ticket {
+  height: auto;
+  width: auto;
+  max-width: 768px;
+  max-height: 1000px;
+}
+
+.text-on-image {
+  display: inline;
+  text-align: left;
+  max-width: 190px;
+  position: absolute;
+  right: 15px;
+  top: 30px;
+  font-size: 20px;
+  font-family: "Ibarra Real Nova", serif;
+  font-weight: bold;
+  /* temporarily making it blue so that we can see the difference */
+  color: blue;
+}
+
+.head-image {
+  margin: 50px;
+  position: relative;
+}
+
+.ticket-input {
+  padding-left: 20%;
+}
+.download-button {
+  padding-top: 10px;
+}
