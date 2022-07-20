@@ -1,33 +1,71 @@
 @import url("https://fonts.googleapis.com/css2?family=Ibarra+Real+Nova&display=swap");
+#root {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 .ticket {
   height: auto;
   width: auto;
   max-width: 768px;
   max-height: 1000px;
 }
+.formWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.formInputWrapper {
+  margin-bottom: 20px;
+  min-width: 300px;
+}
 
-.text-on-image {
-  display: inline;
-  text-align: left;
-  max-width: 190px;
-  position: absolute;
-  right: 15px;
-  top: 30px;
-  font-size: 20px;
-  font-family: "Ibarra Real Nova", serif;
+.formInputWrapper input {
+  width: 100%;
+}
+
+.formInputWrapper p {
   font-weight: bold;
-  /* temporarily making it blue so that we can see the difference */
-  color: blue;
+  margin: 0 0 5px 0;
+}
+.text-on-image {
+  transform-origin: 0 0;
+  transform: rotate(-90deg);
+  right: -70px;
+  position: absolute;
+  font-size: 19px;
+  font-family: "Ibarra Real Nova", serif;
+  font-weight: normal;
+  color: wheat;
+  width: 275px;
+  height: 205px;
+  top: 277px;
+}
+
+.text-on-image-innerwrapper {
+  height: 70%;
+  margin-top: 30px;
+  padding-left: 100px;
+  overflow: hidden;
+  width: 90%;
+}
+
+.text-on-image p {
+  margin: 6px 0 0 0;
+  padding: 0;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .head-image {
-  margin: 50px;
+  margin: 10px;
   position: relative;
 }
 
-.ticket-input {
-  padding-left: 20%;
-}
 .download-button {
   padding-top: 10px;
 }

@@ -1,8 +1,8 @@
-import Raffle from "../statics/raffle.jpg";
+import Raffle from "../statics/raffle.png";
 import html2canvas from "html2canvas";
 import { Button } from "antd";
-import "../statics/_ticket.css";
-import { useState, useRef } from "react";
+import styles from "../statics/_ticket.css";
+import React, { useState, useRef } from "react";
 import { TicketInputs } from "./TicketInputs";
 export const Ticket = () => {
   const [ticketNumber, setTicketNumber] = useState<string>("");
@@ -35,29 +35,33 @@ export const Ticket = () => {
       <div className="head-image" style={{ maxWidth: "768px" }} ref={printRef}>
         <img src={Raffle} alt="Raffle" className="ticket" />
         <div className="text-on-image">
-          <p> {`Ticket Number:${ticketNumber}`}</p>
-          <p> {`Name:${name}`}</p>
-          <p> {`Country:${country}`}</p>
-          <p> {`Contact:${contact}`}</p>
+          <div className="text-on-image-innerwrapper">
+            <p> {`${ticketNumber}`}</p>
+            <p> {`${name}`}</p>
+            <p> {`${country}`}</p>
+            <p> {`${contact}`}</p>
+          </div>
         </div>
       </div>
-      <TicketInputs
-        setTicketNumber={setTicketNumber}
-        setName={setName}
-        setCountry={setCountry}
-        setContact={setContact}
-      />
-      <div className="ticket-input">
-        <div className="download-button">
-          <Button
-            onClick={handleDownloadImage}
-            type="primary"
-            size="small"
-            shape="round"
-            style={{ minWidth: "150px" }}
-          >
-            Download Ticket in JPEG
-          </Button>
+      <div className="formWrapper">
+        <TicketInputs
+          setTicketNumber={setTicketNumber}
+          setName={setName}
+          setCountry={setCountry}
+          setContact={setContact}
+        />
+        <div className="ticket-input">
+          <div className="download-button">
+            <Button
+              onClick={handleDownloadImage}
+              type="primary"
+              size="small"
+              shape="round"
+              style={{ minWidth: "150px" }}
+            >
+              Download Ticket in JPEG
+            </Button>
+          </div>
         </div>
       </div>
     </>
