@@ -41,6 +41,7 @@ export const Ticket = () => {
   };
 
   const getData = async () => {
+    console.log("HIII");
     setLoading(true);
     const { data } = await axios.get<ITicketInput[]>(sheetUrl);
 
