@@ -64,6 +64,7 @@ export const TicketInputs: React.FC<{
       <div className="formInputWrapper">
         <p>Agent Name:</p>
         <input
+          placeholder="Agent(Ticket Seller Name)"
           onChange={(e) => setAgentName(e.currentTarget.value)}
           value={agentName}
         />
