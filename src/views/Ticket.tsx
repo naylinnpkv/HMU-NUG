@@ -62,8 +62,8 @@ export const Ticket = () => {
 
   const multiPayloadGenerator = () => {
     const data = [];
-
-    for (let i = _.toNumber(ticketNumber); i < nums + 1; i++) {
+    const latestNum = _.toNumber(ticketNumber) + nums - 1;
+    for (let i = _.toNumber(ticketNumber); i < latestNum + 1; i++) {
       data.push({
         ticketNumber: i,
         name,
