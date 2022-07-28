@@ -75,10 +75,11 @@ export const Ticket = () => {
   return (
     <>
       <div className="head-image" style={{ maxWidth: "768px" }} ref={printRef}>
+        <p className="in-the-ticket-region"> {`${ticketNumber}`}</p>
         <img src={Raffle} alt="Raffle" className="ticket" />
         <div className="text-on-image">
           <div className="text-on-image-innerwrapper">
-            <p> {`${ticketNumber}`}</p>
+            <p style={{marginTop: '5px'}}> {`${ticketNumber}`}</p>
             <p> {`${name}`}</p>
             <p> {`${country}`}</p>
             <p> {`${contact}`}</p>
