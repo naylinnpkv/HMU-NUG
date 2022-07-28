@@ -17,7 +17,7 @@ export const Ticket = () => {
   const [multiTicketNums, setMultiTicketNums] = useState<string>("");
   const [nums, setNums] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const agentPins = [1234, 5467];
+  const agentPins = [5110, 1655];
   const printRef = useRef<any>();
 
   const sheetUrl =
@@ -173,7 +173,7 @@ export const Ticket = () => {
           </div>
 
           <div className="formInputWrapper">
-            <p>Agent Name:</p>
+            <p>Agent Number:</p>
             <input
               placeholder="Agent(Ticket Seller Name)"
               onChange={(e) => setAgentName(_.toNumber(e.currentTarget.value))}
