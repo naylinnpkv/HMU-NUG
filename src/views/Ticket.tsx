@@ -84,6 +84,7 @@ export const Ticket = () => {
     const { data } = await axios.post<ITicketInput[]>(sheetUrl, payLoad);
 
     setTicketNumber(_.toString(data.length + 1).padStart(5, "0"));
+    setIsMultiple(false);
     setName("");
     setContact("");
     setAgentName(0);
