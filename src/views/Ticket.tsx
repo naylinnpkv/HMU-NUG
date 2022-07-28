@@ -3,7 +3,6 @@ import Raffle from "../statics/raffle.png";
 import html2canvas from "html2canvas";
 import axios from "axios";
 import { Button, Checkbox } from "antd";
-import { useForm } from "react-hook-form";
 import "../statics/_ticket.css";
 import _ from "lodash";
 import { ITicketInput } from "../models";
