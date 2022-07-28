@@ -62,8 +62,8 @@ export const Ticket = () => {
 
   const multiPayloadGenerator = () => {
     const data = [];
-
-    for (let i = _.toNumber(ticketNumber); i < nums + 1; i++) {
+    const latestNum = _.toNumber(ticketNumber) + nums - 1;
+    for (let i = _.toNumber(ticketNumber); i < latestNum + 1; i++) {
       data.push({
         ticketNumber: i,
         name,
@@ -84,6 +84,7 @@ export const Ticket = () => {
     const { data } = await axios.post<ITicketInput[]>(sheetUrl, payLoad);
 
     setTicketNumber(_.toString(data.length + 1).padStart(5, "0"));
+    setIsMultiple(false);
     setName("");
     setContact("");
     setAgentName(0);
