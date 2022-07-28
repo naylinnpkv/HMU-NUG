@@ -1,10 +1,10 @@
+import React, { useState, useRef, useEffect } from "react";
 import Raffle from "../statics/raffle.png";
 import html2canvas from "html2canvas";
 import axios from "axios";
-import { Button } from "antd";
-import styles from "../statics/_ticket.css";
-import React, { useState, useRef, useEffect } from "react";
-import { TicketInputs } from "./TicketInputs";
+import { Button, Checkbox } from "antd";
+import { useForm } from "react-hook-form";
+import "../statics/_ticket.css";
 import _ from "lodash";
 import { ITicketInput } from "../models";
 
@@ -13,9 +13,12 @@ export const Ticket = () => {
   const [name, setName] = useState<string>("");
   const [country, setCountry] = useState<string>("");
   const [contact, setContact] = useState<string>("");
-  const [agentName, setAgentName] = useState<string>("");
+  const [agentName, setAgentName] = useState<number>(0);
+  const [isMultiple, setIsMultiple] = useState<boolean>(false);
+  const [multiTicketNums, setMultiTicketNums] = useState<string>("");
+  const [nums, setNums] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-
+  const agentPins = [1234, 5467];
   const printRef = useRef<any>();
 
   const sheetUrl =
@@ -58,28 +61,54 @@ export const Ticket = () => {
     getData();
   }, [ticketNumber]);
 
+  const multiPayloadGenerator = () => {
+    const data = [];
+
+    for (let i = _.toNumber(ticketNumber); i < nums + 1; i++) {
+      data.push({
+        ticketNumber: i,
+        name,
+        country,
+        contact,
+        agentName,
+      });
+    }
+    return data;
+  };
+
   const postData = async () => {
     setLoading(true);
-    const payLoad = { ticketNumber, name, country, contact, agentName };
+    const payLoad = isMultiple
+      ? multiPayloadGenerator()
+      : { ticketNumber, name, country, contact, agentName };
 
     const { data } = await axios.post<ITicketInput[]>(sheetUrl, payLoad);
 
     setTicketNumber(_.toString(data.length + 1).padStart(5, "0"));
     setName("");
     setContact("");
-    setAgentName("");
+    setAgentName(0);
     setCountry("");
     setLoading(false);
   };
 
+  const toPrintText = (str: string) =>
+    `${ticketNumber}-${_.toString(
+      _.toNumber(str) + _.toNumber(ticketNumber) - 1
+    ).padStart(5, "0")}`;
+
   return (
     <>
       <div className="head-image" style={{ maxWidth: "768px" }} ref={printRef}>
-        <p className="in-the-ticket-region"> {`${ticketNumber}`}</p>
+        <p className="in-the-ticket-region">
+          {isMultiple ? multiTicketNums : ticketNumber}
+        </p>
         <img src={Raffle} alt="Raffle" className="ticket" />
         <div className="text-on-image">
           <div className="text-on-image-innerwrapper">
-            <p style={{marginTop: '5px'}}> {`${ticketNumber}`}</p>
+            <p style={{ marginTop: "5px" }}>
+              {isMultiple ? multiTicketNums : ticketNumber}
+            </p>
             <p> {`${name}`}</p>
             <p> {`${country}`}</p>
             <p> {`${contact}`}</p>
@@ -87,18 +116,71 @@ export const Ticket = () => {
         </div>
       </div>
       <div className="formWrapper">
-        <TicketInputs
-          setTicketNumber={setTicketNumber}
-          ticketNumber={ticketNumber}
-          setName={setName}
-          name={name}
-          setCountry={setCountry}
-          country={country}
-          setContact={setContact}
-          contact={contact}
-          setAgentName={setAgentName}
-          agentName={agentName}
-        />
+        <span>
+          <Checkbox
+            checked={isMultiple}
+            onChange={() => setIsMultiple(!isMultiple)}
+          >
+            Print Multiple Tickets
+          </Checkbox>
+          {isMultiple && (
+            <input
+              type="string"
+              placeholder="Number of Tickets"
+              onChange={(e) => {
+                setMultiTicketNums(toPrintText(e.currentTarget.value));
+                setNums(_.toNumber(e.currentTarget.value));
+              }}
+            />
+          )}
+        </span>
+
+        <div className="ticket-input">
+          <div className="formInputWrapper">
+            <p>Ticket Number:</p>
+            {/* will be read-only when the sheet's api is setup */}
+            <input
+              type={"string"}
+              readOnly
+              value={isMultiple ? multiTicketNums : ticketNumber}
+            />
+          </div>
+          <div className="formInputWrapper">
+            <p>Name:</p>
+            <input
+              onChange={(e) => setName(e.currentTarget.value)}
+              placeholder="Customer Name"
+              value={name}
+            />
+          </div>
+
+          <div className="formInputWrapper">
+            <p>Country:</p>
+            <input
+              onChange={(e) => setCountry(e.currentTarget.value)}
+              placeholder="Origin of Customer"
+              value={country}
+            />
+          </div>
+
+          <div className="formInputWrapper">
+            <p>Contact:</p>
+            <input
+              onChange={(e) => setContact(e.currentTarget.value)}
+              placeholder="Contact of Customer"
+              value={contact}
+            />
+          </div>
+
+          <div className="formInputWrapper">
+            <p>Agent Name:</p>
+            <input
+              placeholder="Agent(Ticket Seller Name)"
+              onChange={(e) => setAgentName(_.toNumber(e.currentTarget.value))}
+              value={agentName}
+            />
+          </div>
+        </div>
         <div className="ticket-input">
           <div className="download-button">
             <Button
@@ -111,6 +193,7 @@ export const Ticket = () => {
               shape="round"
               style={{ minWidth: "150px" }}
               loading={loading}
+              disabled={!agentPins.includes(agentName)}
             >
               Download Ticket in JPEG
             </Button>

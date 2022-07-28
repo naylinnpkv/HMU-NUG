@@ -29,7 +29,9 @@
 .formInputWrapper p {
   font-weight: bold;
   margin: 0 0 5px 0;
+  padding-top: 5px;
 }
+
 .text-on-image {
   transform-origin: 0 0;
   transform: rotate(-90deg);
@@ -67,4 +69,12 @@
 
 .download-button {
   padding-top: 10px;
+}
+
+.in-the-ticket-region {
+  position: absolute;
+  left: 200px;
+  top: 4px;
+  font-size: 14px;
+  font-family: "Ibarra Real Nova", serif;
 }
