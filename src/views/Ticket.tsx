@@ -17,7 +17,11 @@ export const Ticket = () => {
   const [multiTicketNums, setMultiTicketNums] = useState<string>("");
   const [nums, setNums] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
+<<<<<<< HEAD
   const agentPins = [5110, 1655, 9691, 7673, 7834];
+=======
+  const agentPins = [5110, 1655, 9691];
+>>>>>>> main
   const printRef = useRef<any>();
 
   const { VITE_SHEET_URL } = import.meta.env;
