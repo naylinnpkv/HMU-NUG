@@ -17,11 +17,18 @@ export const Ticket = () => {
   const [multiTicketNums, setMultiTicketNums] = useState<string>("");
   const [nums, setNums] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
+<<<<<<< HEAD
   const agentPins = [5110, 2031, 9691, 7673, 7834];
   const printRef = useRef<any>();
 
   const sheetURL =
     "https://sheet.best/api/sheets/6bdca4b6-2a5c-4f26-bbe5-22dff9091666";
+=======
+  const agentPins = [5110, 1655, 9691, 7673, 7834];
+  const printRef = useRef<any>();
+
+  const { VITE_SHEET_URL } = import.meta.env;
+>>>>>>> main
 
   const handleDownloadImage = async () => {
     const element = printRef.current;
@@ -44,7 +51,11 @@ export const Ticket = () => {
 
   const getData = async () => {
     setLoading(true);
+<<<<<<< HEAD
     const { data } = await axios.get<ITicketInput[]>(sheetURL);
+=======
+    const { data } = await axios.get<ITicketInput[]>(VITE_SHEET_URL);
+>>>>>>> main
 
     if (data.length === 0) {
       setTicketNumber(_.toString(1).padStart(5, "0"));
@@ -81,7 +92,11 @@ export const Ticket = () => {
       ? multiPayloadGenerator()
       : { ticketNumber, name, country, contact, agentName };
 
+<<<<<<< HEAD
     const { data } = await axios.post<ITicketInput[]>(sheetURL, payLoad);
+=======
+    const { data } = await axios.post<ITicketInput[]>(VITE_SHEET_URL, payLoad);
+>>>>>>> main
 
     setTicketNumber(_.toString(data.length + 1).padStart(5, "0"));
     setIsMultiple(false);
