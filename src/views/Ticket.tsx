@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import Raffle from "../statics/raffle.png";
+import Raffle from "../statics/raffle.jpg";
 import html2canvas from "html2canvas";
 import axios from "axios";
 import { Button, Checkbox } from "antd";
@@ -17,11 +17,10 @@ export const Ticket = () => {
   const [multiTicketNums, setMultiTicketNums] = useState<string>("");
   const [nums, setNums] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const agentPins = [5110, 1655, 9691];
+  const agentPins = [5110, 1655, 9691, 7673, 7834];
   const printRef = useRef<any>();
 
-  const sheetUrl =
-    "https://sheet.best/api/sheets/6bdca4b6-2a5c-4f26-bbe5-22dff9091666";
+  const { VITE_SHEET_URL } = import.meta.env;
 
   const handleDownloadImage = async () => {
     const element = printRef.current;
@@ -44,7 +43,7 @@ export const Ticket = () => {
 
   const getData = async () => {
     setLoading(true);
-    const { data } = await axios.get<ITicketInput[]>(sheetUrl);
+    const { data } = await axios.get<ITicketInput[]>(VITE_SHEET_URL);
 
     if (data.length === 0) {
       setTicketNumber(_.toString(1).padStart(5, "0"));
@@ -81,7 +80,7 @@ export const Ticket = () => {
       ? multiPayloadGenerator()
       : { ticketNumber, name, country, contact, agentName };
 
-    const { data } = await axios.post<ITicketInput[]>(sheetUrl, payLoad);
+    const { data } = await axios.post<ITicketInput[]>(VITE_SHEET_URL, payLoad);
 
     setTicketNumber(_.toString(data.length + 1).padStart(5, "0"));
     setIsMultiple(false);
@@ -96,6 +95,12 @@ export const Ticket = () => {
     `${ticketNumber}-${_.toString(
       _.toNumber(str) + _.toNumber(ticketNumber) - 1
     ).padStart(5, "0")}`;
+
+  const buttonIsDisabled =
+    name.length < 1 ||
+    contact.length < 1 ||
+    country.length < 1 ||
+    !agentPins.includes(agentName);
 
   return (
     <>
@@ -193,7 +198,7 @@ export const Ticket = () => {
               shape="round"
               style={{ minWidth: "150px" }}
               loading={loading}
-              disabled={!agentPins.includes(agentName)}
+              disabled={buttonIsDisabled}
             >
               Download Ticket in JPEG
             </Button>
