@@ -17,7 +17,7 @@ export const Ticket = () => {
   const [multiTicketNums, setMultiTicketNums] = useState<string>("");
   const [nums, setNums] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const agentPins = [5110, 2031, 9691, 7673, 7834];
+  const agentPins = [5110, 2031, 9691, 7673, 7834, 1655];
   const printRef = useRef<any>();
 
   const sheetURL =
