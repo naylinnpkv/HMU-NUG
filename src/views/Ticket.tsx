@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import Raffle from "../statics/raffle.jpg";
+import JapanRaffle from "../statics/japan_raffle.jpg";
 import html2canvas from "html2canvas";
 import axios from "axios";
 import { Button, Checkbox } from "antd";
@@ -14,14 +15,19 @@ export const Ticket = () => {
   const [contact, setContact] = useState<string>("");
   const [agentName, setAgentName] = useState<number>(0);
   const [isMultiple, setIsMultiple] = useState<boolean>(false);
+  const [isJapan, setIsJapan] = useState<boolean>(false);
   const [multiTicketNums, setMultiTicketNums] = useState<string>("");
   const [nums, setNums] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const agentPins = [5110, 2031, 9691, 7673, 7834, 1655, 3838];
-  const printRef = useRef<any>();
-  
-const {VITE_PUBLIC_SHEET_URL} = import.meta.env;
+  const agentPins = [
+    5110, 2031, 9691, 7673, 7834, 1655, 1090, 2090, 3090, 4090, 5090, 6090,
+    7090,
+  ];
 
+  const raffleTicket = isJapan ? JapanRaffle : Raffle;
+  const printRef = useRef<any>();
+
+  const { VITE_PUBLIC_SHEET_URL } = import.meta.env;
 
   const handleDownloadImage = async () => {
     const element = printRef.current;
@@ -81,7 +87,10 @@ const {VITE_PUBLIC_SHEET_URL} = import.meta.env;
       ? multiPayloadGenerator()
       : { ticketNumber, name, country, contact, agentName };
 
-    const { data } = await axios.post<ITicketInput[]>(VITE_PUBLIC_SHEET_URL, payLoad);
+    const { data } = await axios.post<ITicketInput[]>(
+      VITE_PUBLIC_SHEET_URL,
+      payLoad
+    );
 
     setTicketNumber(_.toString(data.length + 1).padStart(5, "0"));
     setIsMultiple(false);
@@ -109,7 +118,7 @@ const {VITE_PUBLIC_SHEET_URL} = import.meta.env;
         <p className="in-the-ticket-region">
           {isMultiple ? multiTicketNums : ticketNumber}
         </p>
-        <img src={Raffle} alt="Raffle" className="ticket" />
+        <img src={raffleTicket} alt="Raffle" className="ticket" />
         <div className="text-on-image">
           <div className="text-on-image-innerwrapper">
             <p style={{ marginTop: "5px" }}>
@@ -139,12 +148,14 @@ const {VITE_PUBLIC_SHEET_URL} = import.meta.env;
               }}
             />
           )}
+          <Checkbox checked={isJapan} onChange={() => setIsJapan(!isJapan)}>
+            Japan Agent
+          </Checkbox>
         </span>
 
         <div className="ticket-input">
           <div className="formInputWrapper">
             <p>Ticket Number:</p>
-            {/* will be read-only when the sheet's api is setup */}
             <input
               type={"string"}
               readOnly
@@ -184,6 +195,7 @@ const {VITE_PUBLIC_SHEET_URL} = import.meta.env;
               placeholder="Agent(Ticket Seller Name)"
               onChange={(e) => setAgentName(_.toNumber(e.currentTarget.value))}
               value={agentName}
+              maxLength={4}
             />
           </div>
         </div>
