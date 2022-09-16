@@ -3,10 +3,11 @@ import Raffle from "../statics/raffle.jpg";
 import JapanRaffle from "../statics/japan_raffle.jpg";
 import html2canvas from "html2canvas";
 import axios from "axios";
-import { Button, Checkbox } from "antd";
+import { Button, Checkbox, Select } from "antd";
 import "../statics/_ticket.css";
 import _ from "lodash";
 import { ITicketInput } from "../models";
+import countries from "../countries.json";
 
 export const Ticket = () => {
   const [ticketNumber, setTicketNumber] = useState<string>("");
@@ -51,7 +52,7 @@ export const Ticket = () => {
   const getData = async () => {
     setLoading(true);
     const { data } = await axios.get<ITicketInput[]>(VITE_PUBLIC_SHEET_URL);
-
+    console.log(countries[2]);
     if (data.length === 0) {
       setTicketNumber(_.toString(1).padStart(5, "0"));
       setLoading(false);
@@ -173,10 +174,18 @@ export const Ticket = () => {
 
           <div className="formInputWrapper">
             <p>Country:</p>
-            <input
-              onChange={(e) => setCountry(e.currentTarget.value)}
-              placeholder="Origin of Customer"
-              value={country}
+            <Select
+              listHeight={128}
+              style={{ width: "100%" }}
+              dropdownMatchSelectWidth
+              showSearch
+              placeholder="Select a country"
+              options={countries.map((x) => ({
+                label: x.name,
+                value: x.code === "AE" ? "UAE" : x.name,
+              }))}
+              size="large"
+              onSelect={(e: any) => setCountry(e)}
             />
           </div>
 
