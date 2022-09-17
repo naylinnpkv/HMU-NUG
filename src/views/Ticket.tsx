@@ -229,12 +229,11 @@ export const Ticket = () => {
 
             <Button
               className="details-button"
-              size="small"
               shape="round"
               type="link"
               onClick={() => navigate("/ticket/details")}
             >
-              View Ticket Details
+              View Ticket Sales
             </Button>
           </div>
         </div>
