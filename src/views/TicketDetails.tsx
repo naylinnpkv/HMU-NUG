@@ -22,7 +22,7 @@ const TicketDetails: React.FC = () => {
 
   const agentPins = [
     5110, 2031, 9691, 7673, 7834, 1655, 1090, 2090, 3090, 4090, 5090, 6090,
-    7090,
+    7090, 1111,
   ];
 
   const searchOptions = searchByValues.map((val) => ({
@@ -37,9 +37,12 @@ const TicketDetails: React.FC = () => {
       setLoading(false);
       return;
     }
-    const { data } = await axios.get<ITicketData[]>(
-      `${VITE_PUBLIC_SHEET_URL}/agentName/${agentPin}`
-    );
+
+    const url =
+      _.toNumber(agentPin) === 1111
+        ? VITE_PUBLIC_SHEET_URL
+        : `${VITE_PUBLIC_SHEET_URL}/agentName/${agentPin}`;
+    const { data } = await axios.get<ITicketData[]>(url);
 
     setSearchVal(data);
     console.log("SEARCH", searchVal);
@@ -73,7 +76,9 @@ const TicketDetails: React.FC = () => {
       {searchVal.length > 0 && (
         <div>
           <p className="agent-sales">
-            Agent has sold {searchVal.length} tickets
+            {_.toNumber(agentPin) === 1111
+              ? `Total Ticket Sale:${searchVal.length}`
+              : `Agent has sold ${searchVal.length} tickets`}
           </p>
 
           <Card
