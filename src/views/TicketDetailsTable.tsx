@@ -19,6 +19,7 @@ export const TicketDetailsTable: React.FC<{
             <td>{val.name}</td>
             <td>{val.country}</td>
             <td>{val.contact}</td>
+            <td>{val.agentName}</td>
           </tr>
         ))}
       </table>
