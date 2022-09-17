@@ -12,6 +12,7 @@ export const TicketDetailsTable: React.FC<{
           <th>Name</th>
           <th>Country</th>
           <th>Contact</th>
+          <th>Agent Pin</th>
         </tr>
         {searchVal.map((val) => (
           <tr>
