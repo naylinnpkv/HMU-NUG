@@ -78,3 +78,9 @@
   font-size: 14px;
   font-family: "Ibarra Real Nova", serif;
 }
+
+.details-button {
+  position: absolute;
+  right: 50px;
+  margin-right: 10px;
+}

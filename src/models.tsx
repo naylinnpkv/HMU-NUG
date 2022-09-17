@@ -1,4 +1,4 @@
-export interface ITicketInput {
+export interface ITicketData {
   name: string;
   ticketNumber: string;
   contact: string;

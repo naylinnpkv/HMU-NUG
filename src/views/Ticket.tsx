@@ -6,8 +6,9 @@ import axios from "axios";
 import { Button, Checkbox, Select } from "antd";
 import "../statics/_ticket.css";
 import _ from "lodash";
-import { ITicketInput } from "../models";
+import { ITicketData } from "../models";
 import countries from "../countries.json";
+import { useNavigate } from "react-router-dom";
 
 export const Ticket = () => {
   const [ticketNumber, setTicketNumber] = useState<string>("");
@@ -20,6 +21,7 @@ export const Ticket = () => {
   const [multiTicketNums, setMultiTicketNums] = useState<string>("");
   const [nums, setNums] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
+
   const agentPins = [
     5110, 2031, 9691, 7673, 7834, 1655, 1090, 2090, 3090, 4090, 5090, 6090,
     7090,
@@ -29,7 +31,7 @@ export const Ticket = () => {
   const printRef = useRef<any>();
 
   const { VITE_PUBLIC_SHEET_URL } = import.meta.env;
-
+  const navigate = useNavigate();
   const handleDownloadImage = async () => {
     const element = printRef.current;
     const canvas = await html2canvas(element);
@@ -51,7 +53,7 @@ export const Ticket = () => {
 
   const getData = async () => {
     setLoading(true);
-    const { data } = await axios.get<ITicketInput[]>(VITE_PUBLIC_SHEET_URL);
+    const { data } = await axios.get<ITicketData[]>(VITE_PUBLIC_SHEET_URL);
     console.log(countries[2]);
     if (data.length === 0) {
       setTicketNumber(_.toString(1).padStart(5, "0"));
@@ -88,7 +90,7 @@ export const Ticket = () => {
       ? multiPayloadGenerator()
       : { ticketNumber, name, country, contact, agentName };
 
-    const { data } = await axios.post<ITicketInput[]>(
+    const { data } = await axios.post<ITicketData[]>(
       VITE_PUBLIC_SHEET_URL,
       payLoad
     );
@@ -223,6 +225,15 @@ export const Ticket = () => {
               disabled={buttonIsDisabled}
             >
               Download Ticket in JPEG
+            </Button>
+
+            <Button
+              className="details-button"
+              shape="round"
+              type="link"
+              onClick={() => navigate("/ticket/details")}
+            >
+              View Ticket Sales
             </Button>
           </div>
         </div>
