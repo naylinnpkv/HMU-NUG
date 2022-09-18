@@ -22,7 +22,7 @@ const TicketDetails: React.FC = () => {
 
   const agentPins = [
     5110, 2031, 9691, 7673, 7834, 1655, 1090, 2090, 3090, 4090, 5090, 6090,
-    3838, 7090, 1111,
+    3838, 3838, 7090, 1111,
   ];
 
   const searchOptions = searchByValues.map((val) => ({
