@@ -5,3 +5,8 @@ export interface ITicketData {
   country: string;
   agentName: string;
 }
+
+export interface ICountrySales {
+  country: string;
+  sales: number;
+}

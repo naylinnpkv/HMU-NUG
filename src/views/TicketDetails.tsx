@@ -1,6 +1,6 @@
 import { Input, Button, Card, message } from "antd";
-import React, { useState } from "react";
-import { ITicketData } from "../models";
+import React, { useState, useEffect } from "react";
+import { ITicketData, ICountrySales } from "../models";
 import "../statics/_ticket-details.css";
 import _ from "lodash";
 import axios from "axios";
@@ -10,26 +10,33 @@ const TicketDetails: React.FC = () => {
   const [searchVal, setSearchVal] = useState<ITicketData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [agentPin, setAgentPin] = useState<string>("");
-
+  const [countrySales, setCountrySales] = useState<any>({});
   const { VITE_PUBLIC_SHEET_URL } = import.meta.env;
-
-  const searchByValues = [
-    "Agent Number",
-    "Country",
-    "Ticket Number",
-    "Customer Name",
-  ];
 
   const agentPins = [
     5110, 2031, 9691, 7673, 7834, 1655, 1090, 2090, 3090, 4090, 5090, 6090,
     3838, 3838, 7090, 1111,
   ];
 
-  const searchOptions = searchByValues.map((val) => ({
-    label: val,
-    value: val,
-  }));
+  const totalCountrySales = async () => {
+    setLoading(true);
+    const output: any = {};
+    const { data } = await axios.get<ITicketData[]>(VITE_PUBLIC_SHEET_URL);
+    console.log("DATA", data);
+    _.forEach(data, (x) => {
+      if (!output[x.country as keyof typeof output]) {
+        output[x.country as keyof typeof output] = 1;
+      } else {
+        output[x.country as keyof typeof output] += 1;
+      }
+    });
+    setCountrySales(output);
+    setLoading(false);
+  };
 
+  useEffect(() => {
+    totalCountrySales();
+  }, []);
   const submit = async () => {
     setLoading(true);
     if (!agentPins.includes(_.toNumber(agentPin))) {
@@ -45,13 +52,17 @@ const TicketDetails: React.FC = () => {
     const { data } = await axios.get<ITicketData[]>(url);
 
     setSearchVal(data);
-    console.log("SEARCH", searchVal);
     setLoading(false);
     return;
   };
-
+  console.log("cCOutnere", countrySales);
   return (
     <>
+      <div className="countryList">
+        {_.map(countrySales, (x) => (
+          <div>{x}</div>
+        ))}
+      </div>
       <div className="search-wrapper">
         <Input
           className="search-value"
@@ -72,7 +83,6 @@ const TicketDetails: React.FC = () => {
           Submit
         </Button>
       </div>
-
       {searchVal.length > 0 && (
         <div>
           <p className="agent-sales">
