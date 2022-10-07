@@ -10,7 +10,7 @@ const TicketDetails: React.FC = () => {
   const [searchVal, setSearchVal] = useState<ITicketData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [agentPin, setAgentPin] = useState<string>("");
-  const [countrySales, setCountrySales] = useState<any>({});
+
   const { VITE_PUBLIC_SHEET_URL } = import.meta.env;
 
   const agentPins = [
@@ -18,30 +18,6 @@ const TicketDetails: React.FC = () => {
     3838, 3838, 7090, 1111,
   ];
 
-  const totalCountrySales = async () => {
-    setLoading(true);
-    const temp: { [key: string]: number } = {};
-    const output: any = [];
-    const { data } = await axios.get<ITicketData[]>(VITE_PUBLIC_SHEET_URL);
-
-    _.forEach(data, (x) => {
-      if (!temp[x.country as keyof typeof temp]) {
-        temp[x.country as keyof typeof temp] = 1;
-      } else {
-        temp[x.country as keyof typeof temp] += 1;
-      }
-    });
-
-    for (const property in temp) {
-      output.push({ country: property, sale: temp[property] });
-    }
-    setCountrySales(output);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    totalCountrySales();
-  }, []);
   const submit = async () => {
     setLoading(true);
     if (!agentPins.includes(_.toNumber(agentPin))) {
@@ -63,15 +39,6 @@ const TicketDetails: React.FC = () => {
 
   return (
     <>
-      <div className="wrapper">
-        {_.map(countrySales, (x) => (
-          <div className="countryList">
-            <div>{x.country}</div>
-            <div>{`${x.sale} tickets sold`}</div>
-          </div>
-        ))}
-      </div>
-
       <div className="search-wrapper">
         <Input
           className="search-value"
