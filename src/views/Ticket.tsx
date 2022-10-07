@@ -72,9 +72,9 @@ export const Ticket = () => {
     });
 
     for (const property in temp) {
-      output.push({ country: property, sale: temp[property] });
+      output.push({ country: property, sale: _.toNumber(temp[property]) });
     }
-    setCountrySales(_.orderBy(output, ["sale", "country"], ["desc"]));
+    setCountrySales(_.orderBy(output, ["sale"], ["desc"]));
     setTicketNumber(_.toString(data.length + 1).padStart(5, "0"));
     setLoading(false);
     return;
