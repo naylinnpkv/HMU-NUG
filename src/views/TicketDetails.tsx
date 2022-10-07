@@ -1,6 +1,6 @@
 import { Input, Button, Card, message } from "antd";
-import React, { useState } from "react";
-import { ITicketData } from "../models";
+import React, { useState, useEffect } from "react";
+import { ITicketData, ICountrySales } from "../models";
 import "../statics/_ticket-details.css";
 import _ from "lodash";
 import axios from "axios";
