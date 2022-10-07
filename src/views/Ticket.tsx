@@ -3,7 +3,7 @@ import Raffle from "../statics/raffle.jpg";
 import JapanRaffle from "../statics/japan_raffle.jpg";
 import html2canvas from "html2canvas";
 import axios from "axios";
-import { Button, Checkbox, Select } from "antd";
+import { Button, Checkbox, Select, Spin } from "antd";
 import "../statics/_ticket.css";
 import _ from "lodash";
 import { ITicketData } from "../models";
@@ -64,17 +64,17 @@ export const Ticket = () => {
       return;
     }
     _.forEach(data, (x) => {
-      if (!temp[x.country as keyof typeof temp]) {
+      if (!temp[_.trim(x.country) as keyof typeof temp]) {
         temp[x.country as keyof typeof temp] = 1;
       } else {
-        temp[x.country as keyof typeof temp] += 1;
+        temp[_.trim(x.country) as keyof typeof temp] += 1;
       }
     });
 
     for (const property in temp) {
       output.push({ country: property, sale: temp[property] });
     }
-    setCountrySales(output);
+    setCountrySales(_.orderBy(output, ["sale", "country"], ["desc"]));
     setTicketNumber(_.toString(data.length + 1).padStart(5, "0"));
     setLoading(false);
     return;
@@ -135,12 +135,16 @@ export const Ticket = () => {
   return (
     <>
       <div className="wrapper">
-        {_.map(countrySales, (x) => (
-          <div className="countryList">
-            <div>{x.country}</div>
-            <div>{`${x.sale} tickets sold`}</div>
-          </div>
-        ))}
+        {loading ? (
+          <Spin size="large" />
+        ) : (
+          _.map(countrySales, (x) => (
+            <div className="countryList">
+              <div>{x.country}</div>
+              <div>{`${x.sale} tickets sold`}</div>
+            </div>
+          ))
+        )}
       </div>
       <div className="head-image" style={{ maxWidth: "768px" }} ref={printRef}>
         <p className="in-the-ticket-region">
