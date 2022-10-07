@@ -21,6 +21,7 @@ export const Ticket = () => {
   const [multiTicketNums, setMultiTicketNums] = useState<string>("");
   const [nums, setNums] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
+  const [countrySales, setCountrySales] = useState<any>({});
 
   const agentPins = [
     5110, 2031, 9691, 7673, 7834, 1655, 1090, 2090, 3090, 4090, 5090, 6090,
@@ -53,17 +54,33 @@ export const Ticket = () => {
 
   const getData = async () => {
     setLoading(true);
+    const temp: { [key: string]: number } = {};
+    const output: any = [];
     const { data } = await axios.get<ITicketData[]>(VITE_PUBLIC_SHEET_URL);
-    console.log(countries[2]);
+
     if (data.length === 0) {
       setTicketNumber(_.toString(1).padStart(5, "0"));
       setLoading(false);
       return;
     }
+    _.forEach(data, (x) => {
+      if (!temp[x.country as keyof typeof temp]) {
+        temp[x.country as keyof typeof temp] = 1;
+      } else {
+        temp[x.country as keyof typeof temp] += 1;
+      }
+    });
+
+    for (const property in temp) {
+      output.push({ country: property, sale: temp[property] });
+    }
+    setCountrySales(output);
     setTicketNumber(_.toString(data.length + 1).padStart(5, "0"));
     setLoading(false);
     return;
   };
+
+  useEffect(() => {}, []);
 
   useEffect(() => {
     getData();
@@ -117,6 +134,14 @@ export const Ticket = () => {
 
   return (
     <>
+      <div className="wrapper">
+        {_.map(countrySales, (x) => (
+          <div className="countryList">
+            <div>{x.country}</div>
+            <div>{`${x.sale} tickets sold`}</div>
+          </div>
+        ))}
+      </div>
       <div className="head-image" style={{ maxWidth: "768px" }} ref={printRef}>
         <p className="in-the-ticket-region">
           {isMultiple ? multiTicketNums : ticketNumber}

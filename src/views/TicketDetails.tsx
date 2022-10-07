@@ -1,6 +1,6 @@
 import { Input, Button, Card, message } from "antd";
-import React, { useState } from "react";
-import { ITicketData } from "../models";
+import React, { useState, useEffect } from "react";
+import { ITicketData, ICountrySales } from "../models";
 import "../statics/_ticket-details.css";
 import _ from "lodash";
 import axios from "axios";
@@ -13,22 +13,10 @@ const TicketDetails: React.FC = () => {
 
   const { VITE_PUBLIC_SHEET_URL } = import.meta.env;
 
-  const searchByValues = [
-    "Agent Number",
-    "Country",
-    "Ticket Number",
-    "Customer Name",
-  ];
-
   const agentPins = [
     5110, 2031, 9691, 7673, 7834, 1655, 1090, 2090, 3090, 4090, 5090, 6090,
     3838, 3838, 7090, 1111,
   ];
-
-  const searchOptions = searchByValues.map((val) => ({
-    label: val,
-    value: val,
-  }));
 
   const submit = async () => {
     setLoading(true);
@@ -45,7 +33,6 @@ const TicketDetails: React.FC = () => {
     const { data } = await axios.get<ITicketData[]>(url);
 
     setSearchVal(data);
-    console.log("SEARCH", searchVal);
     setLoading(false);
     return;
   };
@@ -72,7 +59,6 @@ const TicketDetails: React.FC = () => {
           Submit
         </Button>
       </div>
-
       {searchVal.length > 0 && (
         <div>
           <p className="agent-sales">

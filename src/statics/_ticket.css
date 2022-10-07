@@ -84,3 +84,14 @@
   right: 50px;
   margin-right: 10px;
 }
+.wrapper {
+  display: flex;
+  margin: 20px;
+  flex-wrap: wrap;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  color: blueviolet;
+}
+
+.countryList {
+  padding: 10px;
+}
