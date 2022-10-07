@@ -35,3 +35,15 @@ th {
 tr:nth-child(even) {
   background-color: #dddddd;
 }
+
+.wrapper {
+  display: flex;
+  margin: 20px;
+  flex-wrap: wrap;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  color: blueviolet;
+}
+
+.countryList {
+  padding: 10px;
+}

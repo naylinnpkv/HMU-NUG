@@ -20,16 +20,21 @@ const TicketDetails: React.FC = () => {
 
   const totalCountrySales = async () => {
     setLoading(true);
-    const output: any = {};
+    const temp: { [key: string]: number } = {};
+    const output: any = [];
     const { data } = await axios.get<ITicketData[]>(VITE_PUBLIC_SHEET_URL);
-    console.log("DATA", data);
+
     _.forEach(data, (x) => {
-      if (!output[x.country as keyof typeof output]) {
-        output[x.country as keyof typeof output] = 1;
+      if (!temp[x.country as keyof typeof temp]) {
+        temp[x.country as keyof typeof temp] = 1;
       } else {
-        output[x.country as keyof typeof output] += 1;
+        temp[x.country as keyof typeof temp] += 1;
       }
     });
+
+    for (const property in temp) {
+      output.push({ country: property, sale: temp[property] });
+    }
     setCountrySales(output);
     setLoading(false);
   };
@@ -55,14 +60,18 @@ const TicketDetails: React.FC = () => {
     setLoading(false);
     return;
   };
-  console.log("cCOutnere", countrySales);
+
   return (
     <>
-      <div className="countryList">
+      <div className="wrapper">
         {_.map(countrySales, (x) => (
-          <div>{x}</div>
+          <div className="countryList">
+            <div>{x.country}</div>
+            <div>{`${x.sale} tickets sold`}</div>
+          </div>
         ))}
       </div>
+
       <div className="search-wrapper">
         <Input
           className="search-value"
