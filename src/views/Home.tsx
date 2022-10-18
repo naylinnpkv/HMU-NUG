@@ -1,26 +1,24 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Space } from "antd";
-import "./Home.css";
 
 export const Home = () => {
   return (
-    <div className="space-align-block">
-      <Space size="large" align="center" direction="horizontal">
-        <Link to="/ticket">
-          <Button
-            type="primary"
-            size="middle"
-            shape="round"
-            style={{ minWidth: "150px" }}
-          >
-            Generate E-Ticket
-          </Button>
-        </Link>
+    <Space size="large" align="center" direction="horizontal">
+      <Link to="/ticket">
         <Button
           type="primary"
           size="middle"
-          disabled
+          shape="round"
+          style={{ minWidth: "150px" }}
+        >
+          Generate E-Ticket
+        </Button>
+      </Link>
+      <Link to="/raffle-generator">
+        <Button
+          type="primary"
+          size="middle"
           shape="round"
           style={{
             background: "wheat",
@@ -30,7 +28,7 @@ export const Home = () => {
         >
           Raffle
         </Button>
-      </Space>
-    </div>
+      </Link>
+    </Space>
   );
 };
