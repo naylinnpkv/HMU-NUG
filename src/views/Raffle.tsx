@@ -1,51 +1,56 @@
-import { Space, Card, Spin } from "antd";
+import { Space, Card, Spin, Button } from "antd";
 import React, { useState, useEffect } from "react";
 import "../statics/_raffle.css";
-
+import Deepawali from "../statics/deepawali.png";
+import _ from "lodash";
 export const Raffle = () => {
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [firstDigit, setFirstDigit] = useState<number | null>(null);
   const [secondDigit, setSecondDigit] = useState<number | null>(null);
   const [thirdDigit, setThirdDigit] = useState<number | null>(null);
   const [fourthDigit, setFourthDigit] = useState<number | null>(null);
-  useEffect(() => {
-    let digit4 = setTimeout(() => {
-      setFourthDigit(Math.floor(Math.random() * 9));
-    }, 3000);
-    let digit3 = setTimeout(() => {
-      setThirdDigit(Math.floor(Math.random() * 9));
-    }, 4500);
-    let digit2 = setTimeout(() => {
-      setSecondDigit(Math.floor(Math.random() * 9));
-    }, 6000);
-    let digit1 = setTimeout(() => {
-      setFirstDigit(Math.floor(Math.random() * 9));
-    }, 7500);
+  const [loading, setLoading] = useState<boolean>(false);
+  // const prizes = ["First", "Second", "Third", "Fourth", "Fifth", "Sixth"];
+  const getWinningNumbers = () => {
+    setLoading(true);
+    setFirstDigit(Math.floor(Math.random() * 9));
+    setSecondDigit(Math.floor(Math.random() * 9));
+    setThirdDigit(Math.floor(Math.random() * 9));
+    setFourthDigit(Math.floor(Math.random() * 9));
 
-    return () => {
-      clearTimeout(digit4);
-      clearTimeout(digit3);
-      clearTimeout(digit2);
-      clearTimeout(digit1);
-    };
-  }, []);
+    setTimeout(() => setLoading(false), 5000);
+  };
 
   return (
-    <div className="raffle-wrapper">
-      <Space size="large" align="center" direction="horizontal">
-        <Card className="card">
-          {firstDigit ? firstDigit : <Spin size="small" />}
-        </Card>
-        <Card className="card">
-          {secondDigit ? secondDigit : <Spin size="small" />}
-        </Card>
-        <Card className="card">
-          {thirdDigit ? thirdDigit : <Spin size="small" />}
-        </Card>
-        <Card className="card">
-          {fourthDigit ? fourthDigit : <Spin size="small" />}
-        </Card>
-      </Space>
-    </div>
+    <>
+      <img src={Deepawali} />
+
+      <div className="raffle-wrapper">
+        <Space size="large" align="center" direction="horizontal">
+          <Card className="card">
+            {!loading ? firstDigit : <Spin size="small" />}
+          </Card>
+          <Card className="card">
+            {!loading ? secondDigit : <Spin size="small" />}
+          </Card>
+          <Card className="card">
+            {!loading ? thirdDigit : <Spin size="small" />}
+          </Card>
+          <Card className="card">
+            {!loading ? fourthDigit : <Spin size="small" />}
+          </Card>
+        </Space>
+      </div>
+      <div className="raffle-button">
+        <Button
+          onClick={getWinningNumbers}
+          type="primary"
+          size="small"
+          shape="round"
+          disabled={loading}
+        >
+          Sixth Prize
+        </Button>
+      </div>
+    </>
   );
 };
