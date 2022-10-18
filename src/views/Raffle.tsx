@@ -48,7 +48,7 @@ export const Raffle = () => {
           shape="round"
           disabled={loading}
         >
-          Sixth Prize
+          Generate Prize
         </Button>
       </div>
     </>
