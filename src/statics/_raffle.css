@@ -19,7 +19,7 @@
   top: 55%;
   left: 27%;
 }
-img {
+.raffle-bg {
   min-height: 100%;
   min-width: 1024px;
 
@@ -33,7 +33,7 @@ img {
 
 @media screen and (max-width: 1024px) {
   /* Specific to this particular image */
-  img {
+  .raffle-bg {
     left: 50%;
     margin-left: -512px; /* 50% */
   }
