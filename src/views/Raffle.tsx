@@ -22,7 +22,7 @@ export const Raffle = () => {
 
   return (
     <>
-      <img src={Deepawali} />
+      <img className="raffle-bg" src={Deepawali} />
 
       <div className="raffle-wrapper">
         <Space size="large" align="center" direction="horizontal">
