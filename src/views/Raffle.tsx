@@ -12,12 +12,17 @@ export const Raffle = () => {
     null
   );
   const prizes = ["First", "Second", "Third", "Fourth", "Fifth", "Sixth"];
+  const firstDigitOptions = [0, 1, 2, 3, 4, 5, 6, 9];
 
   const { VITE_PUBLIC_RAFFLE_WINNERS_URL } = import.meta.env;
 
   const generateWinningNumbers = async () => {
     setLoading(true);
-    const first = _.toString(Math.floor(Math.random() * 9));
+    const first = _.toString(
+      firstDigitOptions[
+        Math.floor(Math.random() * firstDigitOptions.length - 1)
+      ]
+    );
     const second = _.toString(Math.floor(Math.random() * 9));
     const third = _.toString(Math.floor(Math.random() * 9));
     const fourth = _.toString(Math.floor(Math.random() * 9));
