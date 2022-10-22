@@ -8,7 +8,11 @@ import axios from "axios";
 export const Raffle = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [winningNums, setWinningNums] = useState<Array<{ prizes: number }>>([]);
+<<<<<<< HEAD
   const [currentWinningNum, setCurrentWinningNum] = useState<string | null>(
+=======
+  const [currentWinningNum, setCurrentWinningNum] = useState<number | null>(
+>>>>>>> main
     null
   );
   const prizes = ["First", "Second", "Third", "Fourth", "Fifth", "Sixth"];
@@ -17,13 +21,24 @@ export const Raffle = () => {
 
   const generateWinningNumbers = async () => {
     setLoading(true);
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
     const first = _.toString(Math.floor(Math.random() * 9));
     const second = _.toString(Math.floor(Math.random() * 9));
     const third = _.toString(Math.floor(Math.random() * 9));
     const fourth = _.toString(Math.floor(Math.random() * 9));
+<<<<<<< HEAD
 
     setCurrentWinningNum((first + second + third + fourth).padStart(4, "0"));
+=======
+    if (_.toNumber(first + second + third + fourth) < 1000) {
+      console.log("HI");
+      generateWinningNumbers();
+    }
+    setCurrentWinningNum(_.toNumber(first + second + third + fourth));
+>>>>>>> main
 
     setTimeout(() => setLoading(false), 4000);
   };
@@ -93,11 +108,16 @@ export const Raffle = () => {
       <div className="prize-list-wrapper">
         {!loading &&
           _.map(winningNums, (num, index) => (
+<<<<<<< HEAD
             <p key={_.toString(num.prizes)}>
               <b>{`${prizes[index]} prize- ${_.toString(num.prizes).padStart(
                 4,
                 "0"
               )}`}</b>
+=======
+            <p key={num.prizes}>
+              <b>{`${prizes[index]} prize- ${num.prizes}`}</b>
+>>>>>>> main
             </p>
           ))}
       </div>
