@@ -29,7 +29,7 @@ export const Raffle = () => {
 
     setTimeout(() => setLoading(false), 4000);
   };
-
+  // testing
   const postWinningNum = async () => {
     const { data } = await axios.post<{ prizes: number }[]>(
       VITE_PUBLIC_RAFFLE_WINNERS_URL,
