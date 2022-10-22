@@ -8,27 +8,45 @@
   right: 0;
   margin: auto;
 }
-
+.raffle-number {
+  max-width: 100px;
+  height: 100px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
 .card {
   width: 100%;
 }
 
-.raffle-button {
-  position: absolute;
-  width: fit-content;
-  top: 55%;
-  left: 27%;
-}
 .raffle-bg {
   min-height: 100%;
   min-width: 1024px;
-
   width: 100%;
   height: auto;
-
   position: fixed;
   top: 0;
   left: 0;
+}
+@media screen and (max-width: 2400px) {
+  .raffle-button {
+    position: absolute;
+    top: 64%;
+    left: 27%;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 1500px) {
+  .raffle-button {
+    position: absolute;
+    top: 59%;
+    left: 26%;
+    width: 100%;
+  }
 }
 
 @media screen and (max-width: 1024px) {
@@ -37,4 +55,18 @@
     left: 50%;
     margin-left: -512px; /* 50% */
   }
+}
+
+.prize-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100px;
+  position: absolute;
+  top: 60%;
+  left: 52%;
+  padding: 10px;
+  font-size: 17px;
+  color: rgb(214, 9, 91);
+  align-items: flex-start;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }

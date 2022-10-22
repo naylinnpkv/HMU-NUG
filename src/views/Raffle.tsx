@@ -3,50 +3,109 @@ import React, { useState, useEffect } from "react";
 import "../statics/_raffle.css";
 import Deepawali from "../statics/deepawali.png";
 import _ from "lodash";
-export const Raffle = () => {
-  const [firstDigit, setFirstDigit] = useState<number | null>(null);
-  const [secondDigit, setSecondDigit] = useState<number | null>(null);
-  const [thirdDigit, setThirdDigit] = useState<number | null>(null);
-  const [fourthDigit, setFourthDigit] = useState<number | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  // const prizes = ["First", "Second", "Third", "Fourth", "Fifth", "Sixth"];
-  const getWinningNumbers = () => {
-    setLoading(true);
-    setFirstDigit(Math.floor(Math.random() * 9));
-    setSecondDigit(Math.floor(Math.random() * 9));
-    setThirdDigit(Math.floor(Math.random() * 9));
-    setFourthDigit(Math.floor(Math.random() * 9));
+import axios from "axios";
 
-    setTimeout(() => setLoading(false), 5000);
+export const Raffle = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [winningNums, setWinningNums] = useState<Array<{ prizes: number }>>([]);
+  const [currentWinningNum, setCurrentWinningNum] = useState<number | null>(
+    null
+  );
+  const prizes = ["First", "Second", "Third", "Fourth", "Fifth", "Sixth"];
+
+  const { VITE_PUBLIC_RAFFLE_WINNERS_URL } = import.meta.env;
+
+  const generateWinningNumbers = async () => {
+    setLoading(true);
+    const first = _.toString(Math.floor(Math.random() * 9));
+    const second = _.toString(Math.floor(Math.random() * 9));
+    const third = _.toString(Math.floor(Math.random() * 9));
+    const fourth = _.toString(Math.floor(Math.random() * 9));
+    if (_.toNumber(first + second + third + fourth) < 1000) {
+      console.log("HI");
+      generateWinningNumbers();
+    }
+    setCurrentWinningNum(_.toNumber(first + second + third + fourth));
+
+    setTimeout(() => setLoading(false), 4000);
   };
+  // testing
+  const postWinningNum = async () => {
+    const { data } = await axios.post<{ prizes: number }[]>(
+      VITE_PUBLIC_RAFFLE_WINNERS_URL,
+      {
+        prizes: currentWinningNum,
+      }
+    );
+    setWinningNums((prev) => [...prev, ...data]);
+  };
+  const getWinningNums = async () => {
+    const { data } = await axios.get<Array<{ prizes: number }>>(
+      VITE_PUBLIC_RAFFLE_WINNERS_URL
+    );
+
+    setWinningNums(data);
+  };
+
+  useEffect(() => {
+    getWinningNums();
+    if (currentWinningNum !== null && currentWinningNum > 0 && loading) {
+      postWinningNum();
+    }
+  }, [currentWinningNum]);
 
   return (
     <>
       <img className="raffle-bg" src={Deepawali} />
 
       <div className="raffle-wrapper">
-        <Space size="large" align="center" direction="horizontal">
-          <Card className="card">
-            {!loading ? firstDigit : <Spin size="small" />}
-          </Card>
-          <Card className="card">
-            {!loading ? secondDigit : <Spin size="small" />}
-          </Card>
-          <Card className="card">
-            {!loading ? thirdDigit : <Spin size="small" />}
-          </Card>
-          <Card className="card">
-            {!loading ? fourthDigit : <Spin size="small" />}
-          </Card>
-        </Space>
+        <div className="raffle-number">
+          <Space size="large" align="center" direction="horizontal">
+            <Card className="card">
+              {!loading ? (
+                _.toString(currentWinningNum)[0]
+              ) : (
+                <Spin size="small" />
+              )}
+            </Card>
+            <Card className="card">
+              {!loading ? (
+                _.toString(currentWinningNum)[1]
+              ) : (
+                <Spin size="small" />
+              )}
+            </Card>
+            <Card className="card">
+              {!loading ? (
+                _.toString(currentWinningNum)[2]
+              ) : (
+                <Spin size="small" />
+              )}
+            </Card>
+            <Card className="card">
+              {!loading ? (
+                _.toString(currentWinningNum)[3]
+              ) : (
+                <Spin size="small" />
+              )}
+            </Card>
+          </Space>
+        </div>
+      </div>
+      <div className="prize-list-wrapper">
+        {!loading &&
+          _.map(winningNums, (num, index) => (
+            <p key={num.prizes}>
+              <b>{`${prizes[index]} prize- ${num.prizes}`}</b>
+            </p>
+          ))}
       </div>
       <div className="raffle-button">
         <Button
-          onClick={getWinningNumbers}
+          onClick={generateWinningNumbers}
           type="primary"
-          size="small"
           shape="round"
-          disabled={loading}
+          disabled={loading || winningNums.length === 6}
         >
           Generate Prize
         </Button>
