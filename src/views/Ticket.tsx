@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import Raffle from "../statics/raffle.jpg";
+import Raffle from "../statics/chin_raffle.png";
 import JapanRaffle from "../statics/japan_raffle.jpg";
 import html2canvas from "html2canvas";
 import axios from "axios";
@@ -32,7 +32,11 @@ export const Ticket = () => {
   const printRef = useRef<any>();
 
   const { VITE_PUBLIC_SHEET_URL } = import.meta.env;
+
+  console.log("VITE", VITE_PUBLIC_SHEET_URL);
+
   const navigate = useNavigate();
+
   const handleDownloadImage = async () => {
     const element = printRef.current;
     const canvas = await html2canvas(element);
@@ -79,8 +83,6 @@ export const Ticket = () => {
     setLoading(false);
     return;
   };
-
-  useEffect(() => {}, []);
 
   useEffect(() => {
     getData();
