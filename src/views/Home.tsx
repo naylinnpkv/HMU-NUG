@@ -18,6 +18,7 @@ export const Home = () => {
       <Link to="/raffle-generator">
         <Button
           type="primary"
+          disabled
           size="middle"
           shape="round"
           style={{
