@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
-import Raffle from "../statics/chin_raffle.png";
-import JapanRaffle from "../statics/japan_raffle.jpg";
+
 import html2canvas from "html2canvas";
 import axios from "axios";
 import { Button, Checkbox, Select, Spin } from "antd";
 import "../statics/_ticket.css";
 import _ from "lodash";
 import { ITicketData } from "../models";
+import { TicketImage } from "./TicketImage";
 import countries from "../countries.json";
 import { useNavigate } from "react-router-dom";
 
@@ -28,12 +28,10 @@ export const Ticket = () => {
     7090, 3838,
   ];
 
-  const raffleTicket = isJapan ? JapanRaffle : Raffle;
+  // const raffleTicket = isJapan ? JapanRaffle : Raffle;
   const printRef = useRef<any>();
 
   const { VITE_PUBLIC_SHEET_URL } = import.meta.env;
-
-  console.log("VITE", VITE_PUBLIC_SHEET_URL);
 
   const navigate = useNavigate();
 
@@ -135,129 +133,127 @@ export const Ticket = () => {
     !agentPins.includes(agentName);
 
   return (
-    <>
-      <div className="wrapper">
-        {loading ? (
-          <Spin size="large" />
-        ) : (
-          _.map(countrySales, (x) => (
-            <div className="countryList">
-              <div>{x.country}</div>
-              <div>{`${x.sale} tickets sold`}</div>
-            </div>
-          ))
-        )}
-      </div>
-      <div className="head-image" style={{ maxWidth: "768px" }} ref={printRef}>
-        <p className="in-the-ticket-region">
-          {isMultiple ? multiTicketNums : ticketNumber}
-        </p>
-        <img src={raffleTicket} alt="Raffle" className="ticket" />
-        <div className="text-on-image">
-          <div className="text-on-image-innerwrapper">
-            <p style={{ marginTop: "5px" }}>
-              {isMultiple ? multiTicketNums : ticketNumber}
-            </p>
-            <p> {`${name}`}</p>
-            <p> {`${country}`}</p>
-            <p> {`${contact}`}</p>
-          </div>
-        </div>
-      </div>
-      <div className="formWrapper">
-        <span>
-          <Checkbox
-            checked={isMultiple}
-            onChange={() => setIsMultiple(!isMultiple)}
-          >
-            Print Multiple Tickets
-          </Checkbox>
-          {isMultiple && (
-            <input
-              type="string"
-              placeholder="Number of Tickets"
-              onChange={(e) => {
-                setMultiTicketNums(toPrintText(e.currentTarget.value));
-                setNums(_.toNumber(e.currentTarget.value));
-              }}
-            />
+    <div className="form_wrapper">
+      <div className="countries_data">
+        <ul className="wrapper">
+          {loading ? (
+            <Spin size="large" />
+          ) : (
+            _.map(countrySales, (x) => (
+              <li className="countryList" key={x.country}>
+                <div>{x.country}</div>
+                <div>{`${x.sale} tickets sold`}</div>
+              </li>
+            ))
           )}
-          <Checkbox checked={isJapan} onChange={() => setIsJapan(!isJapan)}>
-            Japan Agent
-          </Checkbox>
-        </span>
-
-        <div className="ticket-input">
-          <div className="formInputWrapper">
-            <p>Ticket Number:</p>
-            <input
-              type={"string"}
-              readOnly
-              value={isMultiple ? multiTicketNums : ticketNumber}
-            />
-          </div>
-          <div className="formInputWrapper">
-            <p>Name:</p>
-            <input
-              onChange={(e) => setName(e.currentTarget.value)}
-              placeholder="Customer Name"
-              value={name}
-            />
-          </div>
-
-          <div className="formInputWrapper">
-            <p>Country:</p>
-            <Select
-              listHeight={128}
-              style={{ width: "100%" }}
-              dropdownMatchSelectWidth
-              showSearch
-              placeholder="Select a country"
-              options={countries.map((x) => ({
-                label: x.name,
-                value: x.code === "AE" ? "UAE" : x.name,
-              }))}
-              size="large"
-              onSelect={(e: any) => setCountry(e)}
-            />
-          </div>
-
-          <div className="formInputWrapper">
-            <p>Contact:</p>
-            <input
-              onChange={(e) => setContact(e.currentTarget.value)}
-              placeholder="Contact of Customer"
-              value={contact}
-            />
-          </div>
-
-          <div className="formInputWrapper">
-            <p>Agent Number:</p>
-            <input
-              placeholder="Agent(Ticket Seller Name)"
-              onChange={(e) => setAgentName(_.toNumber(e.currentTarget.value))}
-              value={agentName}
-              maxLength={4}
-            />
-          </div>
-        </div>
-        <div className="ticket-input">
-          <div className="download-button">
-            <Button
-              onClick={() => {
-                handleDownloadImage();
-                postData();
-              }}
-              type="primary"
-              size="small"
-              shape="round"
-              style={{ minWidth: "150px" }}
-              loading={loading}
-              disabled={buttonIsDisabled}
+        </ul>
+      </div>
+      <div className="ticket_form">
+        <TicketImage
+          isMultiple={isMultiple}
+          multiTicketNums={multiTicketNums}
+          ticketNumber={ticketNumber}
+          name={name}
+          printRef={printRef}
+          country={country}
+          contact={contact}
+        />
+        <div className="formWrapper">
+          <span>
+            <Checkbox
+              checked={isMultiple}
+              onChange={() => setIsMultiple(!isMultiple)}
             >
-              Download Ticket in JPEG
-            </Button>
+              Print Multiple Tickets
+            </Checkbox>
+            {isMultiple && (
+              <input
+                type="string"
+                placeholder="Number of Tickets"
+                onChange={(e) => {
+                  setMultiTicketNums(toPrintText(e.currentTarget.value));
+                  setNums(_.toNumber(e.currentTarget.value));
+                }}
+              />
+            )}
+            {/* <Checkbox checked={isJapan} onChange={() => setIsJapan(!isJapan)}>
+              Japan Agent
+            </Checkbox> */}
+          </span>
 
+          <div className="ticket-input">
+            <div className="formInputWrapper">
+              <p>Ticket Number:</p>
+              <input
+                type={"string"}
+                readOnly
+                value={isMultiple ? multiTicketNums : ticketNumber}
+              />
+            </div>
+            <div className="formInputWrapper">
+              <p>Name:</p>
+              <input
+                onChange={(e) => setName(e.currentTarget.value)}
+                placeholder="Customer Name"
+                value={name}
+              />
+            </div>
+
+            <div className="formInputWrapper">
+              <p>Country:</p>
+              <Select
+                listHeight={128}
+                style={{ width: "100%" }}
+                dropdownMatchSelectWidth
+                showSearch
+                placeholder="Select a country"
+                options={countries.map((x) => ({
+                  label: x.name,
+                  value: x.code === "AE" ? "UAE" : x.name,
+                }))}
+                size="large"
+                onSelect={(e: any) => setCountry(e)}
+              />
+            </div>
+
+            <div className="formInputWrapper">
+              <p>Contact:</p>
+              <input
+                onChange={(e) => setContact(e.currentTarget.value)}
+                placeholder="Contact of Customer"
+                value={contact}
+              />
+            </div>
+
+            <div className="formInputWrapper">
+              <p>Agent Number:</p>
+              <input
+                placeholder="Agent(Ticket Seller Name)"
+                onChange={(e) =>
+                  setAgentName(_.toNumber(e.currentTarget.value))
+                }
+                value={agentName}
+                maxLength={4}
+              />
+            </div>
+          </div>
+          <div className="ticket-input">
+            <div className="download-button">
+              <Button
+                onClick={() => {
+                  handleDownloadImage();
+                  postData();
+                }}
+                type="primary"
+                size="small"
+                shape="round"
+                style={{ minWidth: "150px" }}
+                loading={loading}
+                disabled={buttonIsDisabled}
+              >
+                Download Ticket in JPEG
+              </Button>
+            </div>
             <Button
               className="details-button"
               shape="round"
@@ -269,6 +265,6 @@ export const Ticket = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };

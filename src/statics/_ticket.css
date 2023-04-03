@@ -92,6 +92,11 @@
   color: blueviolet;
 }
 
-.countryList {
+/* .countryList {
   padding: 10px;
+} */
+
+.form_wrapper {
+  display: flex;
+  margin: 20px;
 }
