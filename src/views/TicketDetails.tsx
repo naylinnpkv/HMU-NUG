@@ -13,7 +13,10 @@ const TicketDetails: React.FC = () => {
 
   const { VITE_PUBLIC_SHEET_URL } = import.meta.env;
 
-  const agentPins = [5110, 2031, 9691, 7673, 7834, 3838, 7090];
+  const agentPins = [
+    5110, 2031, 9691, 7673, 7834, 1655, 1090, 2090, 3090, 4090, 5090, 6090,
+    7090, 3838, 9010,
+  ];
 
   const submit = async () => {
     setLoading(true);
