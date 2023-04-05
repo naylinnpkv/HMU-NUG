@@ -60,8 +60,11 @@ export const Ticket = () => {
     const output: any = [];
     const { data } = await axios.get<ITicketData[]>(VITE_PUBLIC_SHEET_URL);
 
-    if (data.length === 0) {
-      setTicketNumber(_.toString(1).padStart(5, "0"));
+    // adjusted the length as 1-300 will be printed and sold as paper ticket
+    const adjustedDataLength = data.length + 300;
+
+    if (adjustedDataLength === 300) {
+      setTicketNumber(_.toString(301).padStart(5, "0"));
       setLoading(false);
       return;
     }
@@ -77,7 +80,7 @@ export const Ticket = () => {
       output.push({ country: property, sale: _.toNumber(temp[property]) });
     }
     setCountrySales(_.orderBy(output, ["sale"], ["desc"]));
-    setTicketNumber(_.toString(data.length + 1).padStart(5, "0"));
+    setTicketNumber(_.toString(adjustedDataLength + 1).padStart(5, "0"));
     setLoading(false);
     return;
   };

@@ -13,10 +13,7 @@ const TicketDetails: React.FC = () => {
 
   const { VITE_PUBLIC_SHEET_URL } = import.meta.env;
 
-  const agentPins = [
-    5110, 2031, 9691, 7673, 7834, 1655, 1090, 2090, 3090, 4090, 5090, 6090,
-    3838, 3838, 7090, 1111,
-  ];
+  const agentPins = [5110, 2031, 9691, 7673, 7834, 3838, 7090];
 
   const submit = async () => {
     setLoading(true);
@@ -27,7 +24,7 @@ const TicketDetails: React.FC = () => {
     }
 
     const url =
-      _.toNumber(agentPin) === 1111
+      _.toNumber(agentPin) === 9010 // master key to retrieve all the sales
         ? VITE_PUBLIC_SHEET_URL
         : `${VITE_PUBLIC_SHEET_URL}/agentName/${agentPin}`;
     const { data } = await axios.get<ITicketData[]>(url);
