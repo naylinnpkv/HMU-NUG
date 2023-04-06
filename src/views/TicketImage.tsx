@@ -1,5 +1,5 @@
 import React from "react";
-import Raffle from "../statics/chin_raffle.png";
+import Raffle from "../statics/chin_raffle.jpg";
 export const TicketImage: React.FC<{
   isMultiple: boolean;
   multiTicketNums: string;
