@@ -86,15 +86,17 @@
 }
 .wrapper {
   display: flex;
-  margin: 20px;
+  list-style: none;
+  flex-direction: column;
+  margin: 10px 50px auto -100px;
   flex-wrap: wrap;
   font-family: Georgia, "Times New Roman", Times, serif;
   color: blueviolet;
 }
 
-/* .countryList {
+.countryList {
   padding: 10px;
-} */
+}
 
 .form_wrapper {
   display: flex;

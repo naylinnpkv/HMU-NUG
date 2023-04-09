@@ -20,7 +20,8 @@
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.3.0",
     "vite-plugin-checker": "^0.5.1",
-    "vite-plugin-svgr": "^2.2.0"
+    "vite-plugin-svgr": "^2.2.0",
+    "yup": "^1.0.2"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.182",

@@ -9,6 +9,7 @@ import { ITicketData } from "../models";
 import { TicketImage } from "./TicketImage";
 import countries from "../countries.json";
 import { useNavigate } from "react-router-dom";
+import * as Yup from "yup";
 
 export const Ticket = () => {
   const [ticketNumber, setTicketNumber] = useState<string>("");
@@ -22,11 +23,18 @@ export const Ticket = () => {
   const [nums, setNums] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [countrySales, setCountrySales] = useState<any>({});
+  const [emailErr, setEmailErr] = useState<boolean>(false);
 
   const agentPins = [
     5110, 2031, 9691, 7673, 7834, 1655, 1090, 2090, 3090, 4090, 5090, 6090,
     7090, 3838, 9010,
   ];
+
+  const schema = Yup.object().shape({
+    contact: Yup.string()
+      .email("Please enter a valid email")
+      .required("Email is required"),
+  });
 
   // const raffleTicket = isJapan ? JapanRaffle : Raffle;
   const printRef = useRef<any>();
@@ -36,6 +44,8 @@ export const Ticket = () => {
   const navigate = useNavigate();
 
   const handleDownloadImage = async () => {
+    const isValid = await schema.isValid({ contact });
+    if (!isValid) return;
     const element = printRef.current;
     const canvas = await html2canvas(element);
 
@@ -60,10 +70,7 @@ export const Ticket = () => {
     const output: any = [];
     const { data } = await axios.get<ITicketData[]>(VITE_PUBLIC_SHEET_URL);
 
-    // adjusted the length as 1-300 will be printed and sold as paper ticket
-    const adjustedDataLength = data.length + 300;
-
-    if (adjustedDataLength === 300) {
+    if (data.length === 300) {
       setTicketNumber(_.toString(301).padStart(5, "0"));
       setLoading(false);
       return;
@@ -80,7 +87,7 @@ export const Ticket = () => {
       output.push({ country: property, sale: _.toNumber(temp[property]) });
     }
     setCountrySales(_.orderBy(output, ["sale"], ["desc"]));
-    setTicketNumber(_.toString(adjustedDataLength + 1).padStart(5, "0"));
+    setTicketNumber(_.toString(data.length + 1).padStart(5, "0"));
     setLoading(false);
     return;
   };
@@ -105,7 +112,13 @@ export const Ticket = () => {
   };
 
   const postData = async () => {
+    const isValid = await schema.isValid({ contact });
+    if (!isValid) {
+      setEmailErr(true);
+      return;
+    }
     setLoading(true);
+    setEmailErr(false);
     const payLoad = isMultiple
       ? multiPayloadGenerator()
       : { ticketNumber, name, country, contact, agentName };
@@ -220,11 +233,20 @@ export const Ticket = () => {
             </div>
 
             <div className="formInputWrapper">
-              <p>Contact:</p>
+              <div style={{ display: "flex" }}>
+                <p>Contact(email only):</p>
+                {emailErr && (
+                  <p style={{ color: "red", fontSize: "10px" }}>
+                    *Must be in email format
+                  </p>
+                )}
+              </div>
               <input
                 onChange={(e) => setContact(e.currentTarget.value)}
                 placeholder="Contact of Customer"
                 value={contact}
+                type="email"
+                required
               />
             </div>
 
