@@ -17,17 +17,17 @@ export const TicketImage: React.FC<{
   contact,
   country,
 }) => {
+  const onImageTicketNum = isMultiple
+    ? "Temp:" + multiTicketNums
+    : "Temp:" + ticketNumber;
+
   return (
     <div className="head-image" style={{ maxWidth: "768px" }} ref={printRef}>
-      <p className="in-the-ticket-region">
-        {isMultiple ? multiTicketNums : ticketNumber}
-      </p>
+      <p className="in-the-ticket-region">{onImageTicketNum}</p>
       <img src={Raffle} alt="Raffle" className="ticket" />
       <div className="text-on-image">
         <div className="text-on-image-innerwrapper">
-          <p style={{ marginTop: "5px" }}>
-            {isMultiple ? multiTicketNums : ticketNumber}
-          </p>
+          <p style={{ marginTop: "5px" }}>{onImageTicketNum}</p>
           <p> {`${name}`}</p>
           <p> {`${country}`}</p>
           <p> {`${contact}`}</p>
