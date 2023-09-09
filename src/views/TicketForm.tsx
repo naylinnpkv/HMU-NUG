@@ -23,6 +23,7 @@ export const Ticket = () => {
   const [nums, setNums] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [countrySales, setCountrySales] = useState<any>({});
+  const [emailErr, setEmailErr] = useState<boolean>(false);
 
   // const [emailErr, setEmailErr] = useState<boolean>(false);
 
