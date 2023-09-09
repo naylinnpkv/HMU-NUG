@@ -1,7 +1,12 @@
 .search-wrapper {
   padding-top: 100px;
 }
-
+.back_button {
+  width: 100%;
+  hegith: 100%;
+  margin-top: 20px;
+  margin-left: 40px;
+}
 .search-value {
   width: 200px;
 }

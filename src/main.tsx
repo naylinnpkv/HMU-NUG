@@ -15,10 +15,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <React.StrictMode>
         <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/ticket" element={<TicketHome />} />
+          <Route path="/" element={<TicketHome />} />
+          {/* <Route path="/ticket" element={<TicketHome />} /> */}
           <Route path="/ticket/details" element={<TicketDetails />} />
-          <Route path="/raffle-generator" element={<Raffle />} />
+          {/* <Route path="/raffle-generator" element={<Raffle />} /> */}
         </Routes>
       </React.StrictMode>
     </BrowserRouter>

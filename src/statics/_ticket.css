@@ -14,11 +14,9 @@
 .formWrapper {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 .formInputWrapper {
-  margin-bottom: 20px;
   min-width: 300px;
 }
 
@@ -47,6 +45,7 @@
 }
 
 .text-on-image-innerwrapper {
+  font-size: 17px;
   height: 75%;
   padding: 0 10px;
   overflow: hidden;
@@ -73,16 +72,19 @@
 
 .in-the-ticket-region {
   position: absolute;
-  left: 150px;
-  top: 4px;
-  font-size: 14px;
+  color: #fff;
+  left: 60px;
+  top: 20px;
+  font-size: 13px;
+  font-weight: bold;
   font-family: "Ibarra Real Nova", serif;
 }
 
 .details-button {
   position: absolute;
-  right: 50px;
-  margin-right: 10px;
+  top: 20px;
+  right: -60px;
+  margin-right: 100px;
 }
 .wrapper {
   display: flex;
