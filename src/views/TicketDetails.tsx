@@ -15,21 +15,22 @@ const TicketDetails: React.FC = () => {
 
   const { VITE_PUBLIC_SHEET_URL } = import.meta.env;
 
-  const agentPins = [
-    5110, 2031, 9691, 7673, 7834, 1655, 1090, 2090, 3090, 4090, 5090, 6090,
-    7090, 3838, 9010,
-  ];
+  const agentPins = [5110, 2031, 9691, 7673, 7834, 7090, 3838, 9010, 1655];
+  const adminPin = 9779;
 
   const submit = async () => {
     setLoading(true);
-    if (!agentPins.includes(_.toNumber(agentPin))) {
+    if (
+      !agentPins.includes(_.toNumber(agentPin)) &&
+      agentPin !== _.toString(adminPin)
+    ) {
       message.error("Invalid Agent Pin");
       setLoading(false);
       return;
     }
 
     const url =
-      _.toNumber(agentPin) === 9010 // master key to retrieve all the sales
+      _.toNumber(agentPin) === adminPin // master key to retrieve all the sales
         ? VITE_PUBLIC_SHEET_URL
         : `${VITE_PUBLIC_SHEET_URL}/agentName/${agentPin}`;
     const { data } = await axios.get<ITicketData[]>(url);
@@ -77,7 +78,7 @@ const TicketDetails: React.FC = () => {
       {searchVal.length > 0 && (
         <div>
           <p className="agent-sales">
-            {_.toNumber(agentPin) === 1111
+            {_.toNumber(agentPin) === adminPin
               ? `Total Ticket Sale:${searchVal.length}`
               : `Agent has sold ${searchVal.length} tickets`}
           </p>

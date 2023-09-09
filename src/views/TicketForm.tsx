@@ -27,10 +27,7 @@ export const Ticket = () => {
 
   // const [emailErr, setEmailErr] = useState<boolean>(false);
 
-  const agentPins = [
-    5110, 2031, 9691, 7673, 7834, 1655, 1090, 2090, 3090, 4090, 5090, 6090,
-    7090, 3838, 9010,
-  ];
+  const agentPins = [5110, 2031, 9691, 7673, 7834, 7090, 3838, 9010, 1655];
 
   // const schema = Yup.object().shape({
   //   contact: Yup.string()
