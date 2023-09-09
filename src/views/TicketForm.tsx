@@ -8,7 +8,7 @@ import _ from "lodash";
 import { ITicketData } from "../models";
 import { TicketImage } from "./TicketImage";
 import countries from "../countries.json";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 
 export const Ticket = () => {
@@ -23,20 +23,20 @@ export const Ticket = () => {
   const [nums, setNums] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [countrySales, setCountrySales] = useState<any>({});
-  const [emailErr, setEmailErr] = useState<boolean>(false);
+
+  // const [emailErr, setEmailErr] = useState<boolean>(false);
 
   const agentPins = [
     5110, 2031, 9691, 7673, 7834, 1655, 1090, 2090, 3090, 4090, 5090, 6090,
     7090, 3838, 9010,
   ];
 
-  const schema = Yup.object().shape({
-    contact: Yup.string()
-      .email("Please enter a valid email")
-      .required("Email is required"),
-  });
+  // const schema = Yup.object().shape({
+  //   contact: Yup.string()
+  //     .email("Please enter a valid email")
+  //     .required("Email is required"),
+  // });
 
-  // const raffleTicket = isJapan ? JapanRaffle : Raffle;
   const printRef = useRef<any>();
 
   const { VITE_PUBLIC_SHEET_URL } = import.meta.env;
@@ -44,8 +44,8 @@ export const Ticket = () => {
   const navigate = useNavigate();
 
   const handleDownloadImage = async () => {
-    const isValid = await schema.isValid({ contact });
-    if (!isValid) return;
+    // const isValid = await schema.isValid({ contact });
+    // if (!isValid) return;
     const element = printRef.current;
     const canvas = await html2canvas(element);
 
@@ -112,13 +112,13 @@ export const Ticket = () => {
   };
 
   const postData = async () => {
-    const isValid = await schema.isValid({ contact });
-    if (!isValid) {
-      setEmailErr(true);
-      return;
-    }
+    // const isValid = await schema.isValid({ contact });
+    // if (!isValid) {
+    //   setEmailErr(true);
+    //   return;
+    // }
     setLoading(true);
-    setEmailErr(false);
+    // setEmailErr(false);
     const payLoad = isMultiple
       ? multiPayloadGenerator()
       : { ticketNumber, name, country, contact, agentName };
@@ -149,120 +149,133 @@ export const Ticket = () => {
     !agentPins.includes(agentName);
 
   return (
-    <div className="form_wrapper">
-      <div className="countries_data">
-        <ul className="wrapper">
-          {loading ? (
-            <Spin size="large" />
-          ) : (
-            _.map(countrySales, (x) => (
-              <li className="countryList" key={x.country}>
-                <div>{x.country}</div>
-                <div>{`${x.sale} tickets sold`}</div>
-              </li>
-            ))
-          )}
-        </ul>
-      </div>
-      <div className="ticket_form">
-        <TicketImage
-          isMultiple={isMultiple}
-          multiTicketNums={multiTicketNums}
-          ticketNumber={ticketNumber}
-          name={name}
-          printRef={printRef}
-          country={country}
-          contact={contact}
-        />
-        <div className="formWrapper">
-          <span>
-            <Checkbox
-              checked={isMultiple}
-              onChange={() => setIsMultiple(!isMultiple)}
-            >
-              Print Multiple Tickets
-            </Checkbox>
-            {isMultiple && (
-              <input
-                type="string"
-                placeholder="Number of Tickets"
-                onChange={(e) => {
-                  setMultiTicketNums(toPrintText(e.currentTarget.value));
-                  setNums(_.toNumber(e.currentTarget.value));
-                }}
-              />
+    <>
+      <Link to="/ticket/details">
+        <Button
+          className="details-button"
+          size="large"
+          shape="round"
+          type="text"
+        >
+          View Ticket Sales
+        </Button>
+      </Link>
+
+      <div className="form_wrapper">
+        <div className="countries_data">
+          <ul className="wrapper">
+            {loading ? (
+              <Spin size="large" />
+            ) : (
+              _.map(countrySales, (x) => (
+                <li className="countryList" key={x.country}>
+                  <div>{x.country}</div>
+                  <div>{`${x.sale} tickets sold`}</div>
+                </li>
+              ))
             )}
-            {/* <Checkbox checked={isJapan} onChange={() => setIsJapan(!isJapan)}>
-              Japan Agent
-            </Checkbox> */}
-          </span>
+          </ul>
+        </div>
+        <div className="ticket_form">
+          <TicketImage
+            isMultiple={isMultiple}
+            multiTicketNums={multiTicketNums}
+            ticketNumber={ticketNumber}
+            name={name}
+            isJapan={isJapan}
+            printRef={printRef}
+            country={country}
+            contact={contact}
+          />
+          <div className="formWrapper">
+            <span>
+              <Checkbox
+                checked={isMultiple}
+                onChange={() => setIsMultiple(!isMultiple)}
+              >
+                Print Multiple Tickets
+              </Checkbox>
+              {isMultiple && (
+                <input
+                  type="string"
+                  placeholder="Number of Tickets"
+                  onChange={(e) => {
+                    setMultiTicketNums(toPrintText(e.currentTarget.value));
+                    setNums(_.toNumber(e.currentTarget.value));
+                  }}
+                />
+              )}
+              <Checkbox checked={isJapan} onChange={() => setIsJapan(!isJapan)}>
+                Japan Agent
+              </Checkbox>
+            </span>
 
-          <div className="ticket-input">
-            <div className="formInputWrapper">
-              <p>Ticket Number:</p>
-              <input
-                type={"string"}
-                readOnly
-                value={isMultiple ? multiTicketNums : ticketNumber}
-              />
-            </div>
-            <div className="formInputWrapper">
-              <p>Name:</p>
-              <input
-                onChange={(e) => setName(e.currentTarget.value)}
-                placeholder="Customer Name"
-                value={name}
-              />
-            </div>
+            <div className="ticket-input">
+              <div className="formInputWrapper">
+                <p>Ticket Number:</p>
+                <input
+                  type={"string"}
+                  readOnly
+                  value={isMultiple ? multiTicketNums : ticketNumber}
+                />
+              </div>
+              <div className="formInputWrapper">
+                <p>Name:</p>
+                <input
+                  onChange={(e) => setName(e.currentTarget.value)}
+                  placeholder="Customer Name"
+                  value={name}
+                />
+              </div>
 
-            <div className="formInputWrapper">
-              <p>Country:</p>
-              <Select
-                listHeight={128}
-                style={{ width: "100%" }}
-                dropdownMatchSelectWidth
-                showSearch
-                placeholder="Select a country"
-                options={countries.map((x) => ({
-                  label: x.name,
-                  value: x.code === "AE" ? "UAE" : x.name,
-                }))}
-                size="large"
-                onSelect={(e: any) => setCountry(e)}
-              />
-            </div>
+              <div className="formInputWrapper">
+                <p>Country:</p>
+                <Select
+                  listHeight={128}
+                  style={{ width: "100%" }}
+                  dropdownMatchSelectWidth
+                  showSearch
+                  placeholder="Select a country"
+                  options={countries.map((x) => ({
+                    label: x.name,
+                    value: x.code === "AE" ? "UAE" : x.name,
+                  }))}
+                  size="large"
+                  onSelect={(e: any) => setCountry(e)}
+                />
+              </div>
 
-            <div className="formInputWrapper">
-              <div style={{ display: "flex" }}>
-                <p>Contact(email only):</p>
-                {emailErr && (
+              <div className="formInputWrapper">
+                <div style={{ display: "flex" }}>
+                  <p>Contact:</p>
+                  {/* {emailErr && (
                   <p style={{ color: "red", fontSize: "10px" }}>
                     *Must be in email format
                   </p>
-                )}
+                )} */}
+                </div>
+                <input
+                  onChange={(e) => setContact(e.currentTarget.value)}
+                  placeholder="Contact of Customer"
+                  value={contact}
+                  type="email"
+                  required
+                />
               </div>
-              <input
-                onChange={(e) => setContact(e.currentTarget.value)}
-                placeholder="Contact of Customer"
-                value={contact}
-                type="email"
-                required
-              />
+
+              <div className="formInputWrapper">
+                <p>Agent Number:</p>
+                <input
+                  placeholder="Agent(Ticket Seller Name)"
+                  onChange={(e) =>
+                    setAgentName(_.toNumber(e.currentTarget.value))
+                  }
+                  value={agentName}
+                  maxLength={4}
+                />
+              </div>
             </div>
 
-            <div className="formInputWrapper">
-              <p>Agent Number:</p>
-              <input
-                placeholder="Agent(Ticket Seller Name)"
-                onChange={(e) =>
-                  setAgentName(_.toNumber(e.currentTarget.value))
-                }
-                value={agentName}
-                maxLength={4}
-              />
-            </div>
-          </div>
-          <div className="ticket-input">
             <div className="download-button">
               <Button
                 onClick={() => {
@@ -279,17 +292,9 @@ export const Ticket = () => {
                 Download Ticket in JPEG
               </Button>
             </div>
-            <Button
-              className="details-button"
-              shape="round"
-              type="link"
-              onClick={() => navigate("/ticket/details")}
-            >
-              View Ticket Sales
-            </Button>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

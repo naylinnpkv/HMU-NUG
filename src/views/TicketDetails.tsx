@@ -1,10 +1,12 @@
 import { Input, Button, Card, message } from "antd";
-import React, { useState, useEffect } from "react";
-import { ITicketData, ICountrySales } from "../models";
+import React, { useState } from "react";
+import { ITicketData } from "../models";
 import "../statics/_ticket-details.css";
 import _ from "lodash";
 import axios from "axios";
 import { TicketDetailsTable } from "./TicketDetailsTable";
+import { ArrowLeftOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
 const TicketDetails: React.FC = () => {
   const [searchVal, setSearchVal] = useState<ITicketData[]>([]);
@@ -39,6 +41,19 @@ const TicketDetails: React.FC = () => {
 
   return (
     <>
+      <div className="back_button">
+        <Link to="/">
+          <Button
+            type="text"
+            size="large"
+            shape="round"
+            icon={<ArrowLeftOutlined />}
+          >
+            Back To Home
+          </Button>
+        </Link>
+      </div>
+
       <div className="search-wrapper">
         <Input
           className="search-value"
