@@ -33,26 +33,38 @@
 .text-on-image {
   transform-origin: 0 0;
   transform: rotate(-90deg);
-  right: -65px;
+  right: -90px;
   position: absolute;
-  font-size: 19px;
+  font-size: 12px;
   font-family: "Ibarra Real Nova", serif;
   font-weight: bold;
   color: black;
   width: 275px;
   height: 205px;
-  top: 277px;
+  top: -5;
 }
 
 .text-on-image-innerwrapper {
-  font-size: 17px;
-  height: 75%;
+  font-size: 15px;
+  height: 70%;
   padding: 0 10px;
   overflow: hidden;
   width: 70%;
   margin: 25px auto 25px 85px;
 }
+.contact_on_img {
+  position: absolute;
+}
 
+.main_ticket_on_img {
+  position: absolute;
+  top: 60%;
+  left: 40%;
+}
+
+.country_on_img {
+  font-size: 12px;
+}
 .text-on-image p {
   margin: 7px 0 0 0;
   padding: 0;
@@ -72,9 +84,10 @@
 
 .in-the-ticket-region {
   position: absolute;
+  transform: rotate(-90deg);
   color: #fff;
-  left: 60px;
-  top: 20px;
+  left: -5px;
+  top: 100px;
   font-size: 13px;
   font-weight: bold;
   font-family: "Ibarra Real Nova", serif;
