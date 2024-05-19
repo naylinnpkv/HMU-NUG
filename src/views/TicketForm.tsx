@@ -206,9 +206,11 @@ export const Ticket = () => {
                   }}
                 />
               )}
+
+              {/* // temporarily removing the Japan ticket 
               <Checkbox checked={isJapan} onChange={() => setIsJapan(!isJapan)}>
                 Japan Agent
-              </Checkbox>
+              </Checkbox> */}
             </span>
 
             <div className="ticket-input">
