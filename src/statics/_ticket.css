@@ -33,7 +33,7 @@
 .text-on-image {
   transform-origin: 0 0;
   transform: rotate(-90deg);
-  right: -90px;
+  right: -85px;
   position: absolute;
   font-size: 12px;
   font-family: "Ibarra Real Nova", serif;
@@ -84,10 +84,9 @@
 
 .in-the-ticket-region {
   position: absolute;
-  transform: rotate(-90deg);
   color: #fff;
-  left: -5px;
-  top: 100px;
+  left: 80px;
+  top: 17px;
   font-size: 13px;
   font-weight: bold;
   font-family: "Ibarra Real Nova", serif;
