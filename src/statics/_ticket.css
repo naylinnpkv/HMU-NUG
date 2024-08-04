@@ -92,11 +92,18 @@
   font-family: "Ibarra Real Nova", serif;
 }
 
-.details-button {
-  position: absolute;
-  top: 20px;
-  right: -60px;
-  margin-right: 100px;
+.header_menu_wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  font-family: Ubuntu;
+  justify-content: flex-end;
+  margin: 10px;
+}
+
+.header-menu_buttons {
+  margin: 10px;
 }
 .wrapper {
   display: flex;

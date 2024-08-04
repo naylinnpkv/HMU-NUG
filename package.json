@@ -12,6 +12,7 @@
     "@auth0/auth0-react": "^1.10.2",
     "@svgr/cli": "^6.2.1",
     "antd": "^4.21.5",
+    "firebase": "^10.12.5",
     "html2canvas": "^1.4.1",
     "hump": "^0.0.4",
     "lodash": "^4.17.21",
