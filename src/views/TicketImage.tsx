@@ -1,10 +1,11 @@
 import React from "react";
-import Raffle from "../statics/2023_Deepavali_ticket.png";
-import JapanRaffle from "../statics/2023_Japan.png";
-import Chin_2024 from "../statics/2024_chin_ticket.jpg";
+
+import Diwali_2024 from "../statics/2024_MHU_Diwali.jpg";
+import Diwali_2024_10$ from "../statics/2024_MHU_DIWALI_10$.jpg";
 
 export const TicketImage: React.FC<{
   isMultiple: boolean;
+  is10$ticket: boolean;
   isJapan: boolean;
   multiTicketNums: string;
   ticketNumber: string;
@@ -15,6 +16,7 @@ export const TicketImage: React.FC<{
 }> = ({
   isMultiple,
   isJapan,
+  is10$ticket,
   multiTicketNums,
   ticketNumber,
   name,
@@ -27,15 +29,17 @@ export const TicketImage: React.FC<{
   return (
     <div className="head-image" style={{ maxWidth: "768px" }} ref={printRef}>
       <p className="in-the-ticket-region">{onImageTicketNum}</p>
-      <img src={Chin_2024} alt="Raffle" className="ticket" />
+      <img
+        src={is10$ticket ? Diwali_2024_10$ : Diwali_2024}
+        alt="Raffle"
+        className="ticket"
+      />
       <div className="text-on-image">
         <div className="text-on-image-innerwrapper">
+          <p>{onImageTicketNum}</p>
           <p> {`${name}`}</p>
           <p className="country_on_img"> {`${country}`}</p>
           <p className="contact_on_img"> {`${contact}`}</p>
-          <p style={{ marginTop: "19.5px" }} className="main_ticket_on_img">
-            {onImageTicketNum}
-          </p>
         </div>
       </div>
     </div>

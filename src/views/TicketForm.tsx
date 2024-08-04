@@ -1,52 +1,37 @@
 import React, { useState, useRef, useEffect } from "react";
 
 import html2canvas from "html2canvas";
-import axios from "axios";
 import { Button, Checkbox, Select, Spin } from "antd";
 import "../statics/_ticket.css";
 import _ from "lodash";
+import { useAuth } from "../context/AuthContext";
 import { ITicketData } from "../models";
 import { TicketImage } from "./TicketImage";
 import countries from "../countries.json";
-import { Link, useNavigate } from "react-router-dom";
-import * as Yup from "yup";
+import { Link } from "react-router-dom";
+import {
+  createTicket,
+  getLastEndingTicketNum,
+} from "../services/ticketService";
 
-export const Ticket = () => {
-  const [ticketNumber, setTicketNumber] = useState<string>("");
+export const Ticket: React.FC<{ ticketType: string }> = ({ ticketType }) => {
+  const [ticketNumber, setTicketNumber] = useState<number | null>(null);
   const [name, setName] = useState<string>("");
   const [country, setCountry] = useState<string>("");
   const [contact, setContact] = useState<string>("");
   const [agentName, setAgentName] = useState<number>(0);
-  const [isMultiple, setIsMultiple] = useState<boolean>(false);
+  const [isMultiple, setIsMultiple] = useState<boolean>(true);
   const [isJapan, setIsJapan] = useState<boolean>(false);
-  const [multiTicketNums, setMultiTicketNums] = useState<string>("");
-  const [nums, setNums] = useState<number>(0);
+  const [nums, setNums] = useState<number>(5);
   const [loading, setLoading] = useState<boolean>(false);
-  const [countrySales, setCountrySales] = useState<any>({});
-  const [emailErr, setEmailErr] = useState<boolean>(false);
-
-  // const [emailErr, setEmailErr] = useState<boolean>(false);
-
-  const agentPins = [
-    5110, 2031, 9691, 7673, 7834, 7090, 3838, 9010, 1655, 2010, 2020, 2030,
-    2040, 2050, 2060, 2070, 2080, 2090, 3010,
-  ];
-
-  // const schema = Yup.object().shape({
-  //   contact: Yup.string()
-  //     .email("Please enter a valid email")
-  //     .required("Email is required"),
-  // });
+  const [is10$ticket, setIs10$ticket] = useState<boolean>(
+    ticketType.length > 0 && ticketType !== "is25$ticket"
+  );
+  const { currentUser, logout } = useAuth();
 
   const printRef = useRef<any>();
 
-  const { VITE_PUBLIC_SHEET_URL } = import.meta.env;
-
-  const navigate = useNavigate();
-
   const handleDownloadImage = async () => {
-    // const isValid = await schema.isValid({ contact });
-    // if (!isValid) return;
     const element = printRef.current;
     const canvas = await html2canvas(element);
 
@@ -65,72 +50,50 @@ export const Ticket = () => {
     }
   };
 
-  const getData = async () => {
+  const getLatestTicketNum = async () => {
     setLoading(true);
-    const temp: { [key: string]: number } = {};
-    const output: any = [];
-    const { data } = await axios.get<ITicketData[]>(VITE_PUBLIC_SHEET_URL);
+    const totalTicketsCount = await getLastEndingTicketNum(
+      is10$ticket ? "10$" : "25$"
+    );
 
-    if (data.length === 300) {
-      setTicketNumber(_.toString(301).padStart(5, "0"));
-      setLoading(false);
-      return;
+    console.log("lastEnding", totalTicketsCount);
+    if (totalTicketsCount !== undefined && totalTicketsCount) {
+      setTicketNumber(totalTicketsCount);
+    } else {
+      setTicketNumber(null);
     }
-    _.forEach(data, (x) => {
-      if (!temp[_.trim(x.country) as keyof typeof temp]) {
-        temp[x.country as keyof typeof temp] = 1;
-      } else {
-        temp[_.trim(x.country) as keyof typeof temp] += 1;
-      }
-    });
-
-    for (const property in temp) {
-      output.push({ country: property, sale: _.toNumber(temp[property]) });
-    }
-    setCountrySales(_.orderBy(output, ["sale"], ["desc"]));
-    setTicketNumber(_.toString(data.length + 1).padStart(5, "0"));
     setLoading(false);
-    return;
   };
 
   useEffect(() => {
-    getData();
-  }, [ticketNumber]);
+    getLatestTicketNum();
+  }, [is10$ticket]);
 
-  const multiPayloadGenerator = () => {
-    const data = [];
-    const latestNum = _.toNumber(ticketNumber) + nums - 1;
-    for (let i = _.toNumber(ticketNumber); i < latestNum + 1; i++) {
-      data.push({
-        ticketNumber: i,
-        name,
-        country,
-        contact,
-        agentName,
-      });
-    }
-    return data;
-  };
-
-  const postData = async () => {
-    // const isValid = await schema.isValid({ contact });
-    // if (!isValid) {
-    //   setEmailErr(true);
-    //   return;
-    // }
+  const handleTicket = async () => {
     setLoading(true);
-    // setEmailErr(false);
-    const payLoad = isMultiple
-      ? multiPayloadGenerator()
-      : { ticketNumber, name, country, contact, agentName };
 
-    const { data } = await axios.post<ITicketData[]>(
-      VITE_PUBLIC_SHEET_URL,
-      payLoad
-    );
+    if (!ticketNumber && !currentUser) {
+      return;
+    } else {
+      const ticketData: ITicketData = {
+        name,
+        startingTicketNum: ticketNumber || 0,
+        endingTicketNum: ticketNumber ? ticketNumber + (nums - 1) : 0,
+        numberofTickets: nums,
+        contact,
+        country,
+        creatorId: currentUser?.userId,
+      };
+      const createdTicket = await createTicket(
+        ticketData,
+        is10$ticket ? "10$" : "25$"
+      );
+      if (createdTicket) {
+        setTicketNumber(createdTicket.endingTicketNum + 1);
+      }
+    }
 
-    setTicketNumber(_.toString(data.length + 1).padStart(5, "0"));
-    setIsMultiple(false);
+    setNums(5);
     setName("");
     setContact("");
     setAgentName(0);
@@ -138,50 +101,51 @@ export const Ticket = () => {
     setLoading(false);
   };
 
-  const toPrintText = (str: string) =>
-    `${ticketNumber}-${_.toString(
-      _.toNumber(str) + _.toNumber(ticketNumber) - 1
-    ).padStart(5, "0")}`;
-
   const buttonIsDisabled =
-    name.length < 1 ||
-    contact.length < 1 ||
-    country.length < 1 ||
-    !agentPins.includes(agentName);
+    name.length < 1 || contact.length < 1 || country.length < 1 || nums < 1;
+
+  if (loading) return <Spin size="large" style={{ marginTop: "50%" }} />;
 
   return (
     <>
-      <Link to="/ticket/details">
+      <div className="header_menu_wrapper">
+        Welcome {currentUser?.name!}!
+        <Link to="/ticket/details">
+          <Button
+            size="large"
+            shape="round"
+            type="primary"
+            className="header-menu_buttons"
+            disabled
+          >
+            View Ticket Sales
+          </Button>
+        </Link>
         <Button
-          className="details-button"
           size="large"
           shape="round"
-          type="text"
+          danger
+          type="default"
+          className="header-menu_buttons"
+          onClick={() => logout()}
         >
-          View Ticket Sales
+          Log Out
         </Button>
-      </Link>
+      </div>
 
       <div className="form_wrapper">
-        <div className="countries_data">
-          <ul className="wrapper">
-            {loading ? (
-              <Spin size="large" />
-            ) : (
-              _.map(countrySales, (x) => (
-                <li className="countryList" key={x.country}>
-                  <div>{x.country}</div>
-                  <div>{`${x.sale} tickets sold`}</div>
-                </li>
-              ))
-            )}
-          </ul>
-        </div>
         <div className="ticket_form">
           <TicketImage
             isMultiple={isMultiple}
-            multiTicketNums={multiTicketNums}
-            ticketNumber={ticketNumber}
+            multiTicketNums={
+              nums > 0 && ticketNumber
+                ? `${_.toString(ticketNumber)} - ${_.toString(
+                    ticketNumber + (nums - 1)
+                  )}`
+                : ""
+            }
+            is10$ticket={is10$ticket}
+            ticketNumber={_.toString(ticketNumber)}
             name={name}
             isJapan={isJapan}
             printRef={printRef}
@@ -198,10 +162,10 @@ export const Ticket = () => {
               </Checkbox>
               {isMultiple && (
                 <input
-                  type="string"
+                  type="number"
                   placeholder="Number of Tickets"
+                  value={nums}
                   onChange={(e) => {
-                    setMultiTicketNums(toPrintText(e.currentTarget.value));
                     setNums(_.toNumber(e.currentTarget.value));
                   }}
                 />
@@ -211,16 +175,32 @@ export const Ticket = () => {
               <Checkbox checked={isJapan} onChange={() => setIsJapan(!isJapan)}>
                 Japan Agent
               </Checkbox> */}
+              <Checkbox
+                checked={is10$ticket}
+                onChange={() => setIs10$ticket(!is10$ticket)}
+              >
+                10$ Ticket
+              </Checkbox>
             </span>
 
             <div className="ticket-input">
               <div className="formInputWrapper">
                 <p>Ticket Number:</p>
-                <input
-                  type={"string"}
-                  readOnly
-                  value={isMultiple ? multiTicketNums : ticketNumber}
-                />
+                {ticketNumber && isMultiple ? (
+                  <input
+                    type={"string"}
+                    readOnly
+                    value={
+                      ticketNumber
+                        ? `${_.toString(ticketNumber)} - ${_.toString(
+                            ticketNumber + (nums - 1)
+                          )}`
+                        : ""
+                    }
+                  />
+                ) : (
+                  <input type="number" readOnly value={ticketNumber || 0} />
+                )}
               </div>
               <div className="formInputWrapper">
                 <p>Name:</p>
@@ -251,11 +231,6 @@ export const Ticket = () => {
               <div className="formInputWrapper">
                 <div style={{ display: "flex" }}>
                   <p>Contact:</p>
-                  {/* {emailErr && (
-                  <p style={{ color: "red", fontSize: "10px" }}>
-                    *Must be in email format
-                  </p>
-                )} */}
                 </div>
                 <input
                   onChange={(e) => setContact(e.currentTarget.value)}
@@ -265,25 +240,13 @@ export const Ticket = () => {
                   required
                 />
               </div>
-
-              <div className="formInputWrapper">
-                <p>Agent Number:</p>
-                <input
-                  placeholder="Agent(Ticket Seller Name)"
-                  onChange={(e) =>
-                    setAgentName(_.toNumber(e.currentTarget.value))
-                  }
-                  value={agentName}
-                  maxLength={4}
-                />
-              </div>
             </div>
 
             <div className="download-button">
               <Button
                 onClick={() => {
                   handleDownloadImage();
-                  postData();
+                  handleTicket();
                 }}
                 type="primary"
                 size="small"
@@ -292,7 +255,7 @@ export const Ticket = () => {
                 loading={loading}
                 disabled={buttonIsDisabled}
               >
-                Download Ticket in JPEG
+                Create and Download Ticket
               </Button>
             </div>
           </div>

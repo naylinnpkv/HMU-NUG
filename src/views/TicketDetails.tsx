@@ -90,11 +90,11 @@ const TicketDetails: React.FC = () => {
             className="card"
             bodyStyle={{ maxHeight: "40em", overflow: "auto" }}
           >
-            <TicketDetailsTable
+            {/* <TicketDetailsTable
               searchVal={_.sortBy(searchVal, (val) =>
                 _.toNumber(val.ticketNumber)
               )}
-            />
+            /> */}
           </Card>
         </div>
       )}

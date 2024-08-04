@@ -1,33 +1,29 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Space } from "antd";
 
 export const Home = () => {
   return (
     <Space size="large" align="center" direction="horizontal">
-      <Link to="/ticket">
+      <Link to="/create-ticket" state={"is25$ticket"}>
         <Button
           type="primary"
           size="middle"
           shape="round"
           style={{ minWidth: "150px" }}
         >
-          Generate E-Ticket
+          Generate 25$ Tickets
         </Button>
       </Link>
-      <Link to="/raffle-generator">
+      <Link to="/create-ticket" state={"is10$ticket"}>
         <Button
-          type="primary"
-          disabled
           size="middle"
           shape="round"
           style={{
-            background: "wheat",
-            borderColor: "white",
+            backgroundColor: "aqua",
             minWidth: "150px",
           }}
         >
-          Raffle
+          Generate 10$ Tickets
         </Button>
       </Link>
     </Space>

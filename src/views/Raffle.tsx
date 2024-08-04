@@ -1,5 +1,5 @@
 import { Space, Card, Spin, Button } from "antd";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "../statics/_raffle.css";
 import Deepawali from "../statics/deepawali.png";
 import _ from "lodash";
