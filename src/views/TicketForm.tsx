@@ -9,10 +9,12 @@ import { ITicketData } from "../models";
 import { TicketImage } from "./TicketImage";
 import countries from "../countries.json";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   createTicket,
   getLastEndingTicketNum,
 } from "../services/ticketService";
+import ArrowLeftOutlined from "@ant-design/icons/lib/icons/ArrowLeftOutlined";
 
 export const Ticket: React.FC<{ ticketType: string }> = ({ ticketType }) => {
   const [ticketNumber, setTicketNumber] = useState<number | null>(null);
@@ -28,6 +30,8 @@ export const Ticket: React.FC<{ ticketType: string }> = ({ ticketType }) => {
     ticketType.length > 0 && ticketType !== "is25$ticket"
   );
   const { currentUser, logout } = useAuth();
+
+  const navigate = useNavigate();
 
   const printRef = useRef<any>();
 
@@ -56,7 +60,6 @@ export const Ticket: React.FC<{ ticketType: string }> = ({ ticketType }) => {
       is10$ticket ? "10$" : "25$"
     );
 
-    console.log("lastEnding", totalTicketsCount);
     if (totalTicketsCount !== undefined && totalTicketsCount) {
       setTicketNumber(totalTicketsCount);
     } else {
@@ -109,28 +112,41 @@ export const Ticket: React.FC<{ ticketType: string }> = ({ ticketType }) => {
   return (
     <>
       <div className="header_menu_wrapper">
-        Welcome {currentUser?.name!}!
-        <Link to="/ticket/details">
+        <div style={{ marginLeft: "20px" }}>
+          <Button
+            size="large"
+            type="primary"
+            onClick={() => navigate(-1)}
+            shape="round"
+            icon={<ArrowLeftOutlined />}
+          >
+            Back
+          </Button>
+        </div>
+        <div>
+          Welcome {currentUser?.name!}!
+          <Link to="/ticket/details">
+            <Button
+              size="large"
+              shape="round"
+              type="primary"
+              className="header-menu_buttons"
+              disabled
+            >
+              View Ticket Sales
+            </Button>
+          </Link>
           <Button
             size="large"
             shape="round"
-            type="primary"
+            danger
+            type="default"
             className="header-menu_buttons"
-            disabled
+            onClick={() => logout()}
           >
-            View Ticket Sales
+            Log Out
           </Button>
-        </Link>
-        <Button
-          size="large"
-          shape="round"
-          danger
-          type="default"
-          className="header-menu_buttons"
-          onClick={() => logout()}
-        >
-          Log Out
-        </Button>
+        </div>
       </div>
 
       <div className="form_wrapper">
@@ -175,12 +191,12 @@ export const Ticket: React.FC<{ ticketType: string }> = ({ ticketType }) => {
               <Checkbox checked={isJapan} onChange={() => setIsJapan(!isJapan)}>
                 Japan Agent
               </Checkbox> */}
-              <Checkbox
+              {/* <Checkbox
                 checked={is10$ticket}
                 onChange={() => setIs10$ticket(!is10$ticket)}
               >
                 10$ Ticket
-              </Checkbox>
+              </Checkbox> */}
             </span>
 
             <div className="ticket-input">
