@@ -98,7 +98,7 @@
   align-items: center;
   font-size: 20px;
   font-family: Ubuntu;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin: 10px;
 }
 

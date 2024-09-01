@@ -24,7 +24,7 @@ function App() {
         <h1
           style={{ fontSize: "25px", fontStyle: "Ubuntu", color: "darkBlue" }}
         >
-          Welcome from MHU Raffle Generator! Please sign in to create tickets!
+          Welcome to MHU Raffle Generator! Please sign in to create tickets!
         </h1>
         <div>
           <Button
