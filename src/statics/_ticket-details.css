@@ -1,42 +1,54 @@
-.search-wrapper {
-  padding-top: 100px;
-}
-.back_button {
+.container {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  hegith: 100%;
-  margin-top: 20px;
-  margin-left: 40px;
-}
-.search-value {
-  width: 200px;
 }
 
-.submit-button {
-  margin-left: 10px;
-}
-
-.agent-sales {
-  padding: 10px;
-  color: green;
-  position: relative;
-  left: 5em;
-}
-.card {
-  max-height: 1300;
-}
+/* Basic table styling */
 table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
   width: 100%;
-  min-width: 20rem;
+  border-collapse: collapse;
+  table-layout: fixed; /* Helps with sticky header */
 }
 
-td,
-th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
+th,
+td {
+  padding: 12px;
+  border: 1px solid #ddd;
 }
+
+th {
+  position: sticky;
+  top: 0;
+  background-color: #f4f4f4;
+  z-index: 1; /* Ensure header is above the table content */
+  font-weight: bold;
+}
+
+/* Optional: Add alternating row colors */
 tr:nth-child(even) {
-  background-color: #dddddd;
+  background-color: #f9f9f9;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Ticket Number column styling */
+td:first-child {
+  font-weight: bold;
+}
+
+/* Table borders */
+table,
+th,
+td {
+  border: 1px solid #ccc;
+}
+
+/* Adjust font size for small screens */
+@media (max-width: 768px) {
+  table {
+    font-size: 0.9rem;
+  }
 }

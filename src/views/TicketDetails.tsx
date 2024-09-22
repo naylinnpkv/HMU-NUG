@@ -1,104 +1,77 @@
-import { Input, Button, Card, message } from "antd";
-import React, { useState } from "react";
+import { Button, Radio } from "antd";
+import type { RadioChangeEvent } from "antd";
+import React, { useEffect, useState } from "react";
 import { ITicketData } from "../models";
 import "../statics/_ticket-details.css";
 import _ from "lodash";
-import axios from "axios";
-import { TicketDetailsTable } from "./TicketDetailsTable";
+import { Space, Table, Tag } from "antd";
+import type { TableProps } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { getSale } from "../services/ticketService";
+import { TicketDetailsTable } from "./TicketDetailsTable";
 
 const TicketDetails: React.FC = () => {
-  const [searchVal, setSearchVal] = useState<ITicketData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [agentPin, setAgentPin] = useState<string>("");
+  const [tickets, setTickets] = useState<ITicketData[]>([]);
 
-  const { VITE_PUBLIC_SHEET_URL } = import.meta.env;
+  const [ticketGroup, setTicketGroup] = useState<"10$" | "25$">("10$");
 
-  const agentPins = [
-    5110, 2031, 9691, 7673, 7834, 7090, 3838, 9010, 1655, 2010, 2020, 2030,
-    2040, 2050, 2060, 2070, 2080, 2090, 3010,
-  ];
-  const adminPin = 9779;
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
-  const submit = async () => {
-    setLoading(true);
-    if (
-      !agentPins.includes(_.toNumber(agentPin)) &&
-      agentPin !== _.toString(adminPin)
-    ) {
-      message.error("Invalid Agent Pin");
-      setLoading(false);
-      return;
-    }
-
-    const url =
-      _.toNumber(agentPin) === adminPin // master key to retrieve all the sales
-        ? VITE_PUBLIC_SHEET_URL
-        : `${VITE_PUBLIC_SHEET_URL}/agentName/${agentPin}`;
-    const { data } = await axios.get<ITicketData[]>(url);
-
-    setSearchVal(data);
-    setLoading(false);
-    return;
+  const getTickets = async (db: "10$" | "25$") => {
+    const data = await getSale(db, currentUser?.userId);
+    setTickets(data);
   };
 
-  return (
-    <>
-      <div className="back_button">
-        <Link to="/">
-          <Button
-            type="text"
-            size="large"
-            shape="round"
-            icon={<ArrowLeftOutlined />}
-          >
-            Back To Home
-          </Button>
-        </Link>
-      </div>
+  const onChange = (e: RadioChangeEvent) => {
+    setTicketGroup(e.target.value);
+  };
 
-      <div className="search-wrapper">
-        <Input
-          className="search-value"
-          placeholder="Agent Number..."
-          value={agentPin}
-          onChange={(e) => setAgentPin(_.toString(e.currentTarget.value))}
-          maxLength={4}
-        />
+  useEffect(() => {
+    if (!currentUser) return;
+    getTickets(ticketGroup);
+  }, [currentUser, ticketGroup]);
+
+  return (
+    <div className="container">
+      <div style={{ margin: "10px" }}>
         <Button
-          size="small"
-          shape="round"
+          size="large"
           type="primary"
-          onClick={submit}
-          className="submit-button"
-          disabled={agentPin.length > 3 ? false : true}
-          loading={loading}
+          onClick={() => navigate("/")}
+          shape="round"
+          icon={<ArrowLeftOutlined />}
         >
-          Submit
+          Home
         </Button>
       </div>
-      {searchVal.length > 0 && (
-        <div>
-          <p className="agent-sales">
-            {_.toNumber(agentPin) === adminPin
-              ? `Total Ticket Sale:${searchVal.length}`
-              : `Agent has sold ${searchVal.length} tickets`}
-          </p>
-
-          <Card
-            className="card"
-            bodyStyle={{ maxHeight: "40em", overflow: "auto" }}
-          >
-            {/* <TicketDetailsTable
-              searchVal={_.sortBy(searchVal, (val) =>
-                _.toNumber(val.ticketNumber)
-              )}
-            /> */}
-          </Card>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            margin: "20px",
+            fontSize: "17px",
+            fontWeight: "600",
+            color: "teal",
+          }}
+        >
+          {currentUser?.name}
         </div>
-      )}
-    </>
+        <Radio.Group onChange={onChange} value={ticketGroup}>
+          <Radio value={"10$"}>10$ Tickets</Radio>
+          <Radio value={"25$"}>25$ Tickets</Radio>
+        </Radio.Group>
+      </div>
+      <TicketDetailsTable tickets={tickets} />
+    </div>
   );
 };
 

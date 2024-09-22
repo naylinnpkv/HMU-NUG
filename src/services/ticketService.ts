@@ -7,7 +7,7 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { db } from "../../firebase";
-import { ITicketData } from "../models";
+import { IDeletedTicketData, ITicketData } from "../models";
 import _ from "lodash";
 
 export const createTicket = async (
@@ -21,11 +21,23 @@ export const createTicket = async (
     const docRef = await addDoc(collection(db, dbGroup), ticketData);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      console.log("IN THE FUNCTION", docSnap.data());
       return docSnap.data();
     }
   } catch (e) {
     console.error("Error Creating Ticket", e);
+  }
+};
+
+export const addToDeletedTickets = async (ticketData: IDeletedTicketData) => {
+  try {
+    if (!ticketData.creatorName) return;
+    const docRef = await addDoc(collection(db, "deletedTickets"), ticketData);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data();
+    }
+  } catch (e) {
+    console.error("Error Deleting Ticket", e);
   }
 };
 
@@ -36,6 +48,35 @@ export const countTickets = async () => {
     return count;
   } catch (e) {
     console.error("Error Getting the Next Tiket Number", e);
+  }
+};
+
+export const getSale = async (
+  ticketGroup: "10$" | "25$",
+  userId: string
+): Promise<ITicketData[]> => {
+  try {
+    const dbGroup = ticketGroup === "10$" ? "10$tickets" : "25$tickets";
+    const q = query(
+      collection(db, dbGroup),
+      where("creatorId", "==", "fCaIOQ9J8pgwgo1xXpcnDeoNOLQ2")
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    // Extract data from the querySnapshot
+    const tickets: ITicketData[] = querySnapshot.docs.map((doc) => {
+      const data = doc.data() as ITicketData; // Type casting to ITicketData
+      return {
+        ...data, // Spread the document data
+        id: doc.id, // Add the document ID
+      };
+    });
+
+    return tickets;
+  } catch (e) {
+    console.error("Error fetching sales:", e);
+    return [];
   }
 };
 

@@ -125,13 +125,12 @@ export const Ticket: React.FC<{ ticketType: string }> = ({ ticketType }) => {
         </div>
         <div>
           Welcome {currentUser?.name!}!
-          <Link to="/ticket/details">
+          <Link to="/ticket/details" target="_blank">
             <Button
               size="large"
               shape="round"
               type="primary"
               className="header-menu_buttons"
-              disabled
             >
               View Ticket Sales
             </Button>
