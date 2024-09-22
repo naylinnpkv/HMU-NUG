@@ -57,10 +57,7 @@ export const getSale = async (
 ): Promise<ITicketData[]> => {
   try {
     const dbGroup = ticketGroup === "10$" ? "10$tickets" : "25$tickets";
-    const q = query(
-      collection(db, dbGroup),
-      where("creatorId", "==", "fCaIOQ9J8pgwgo1xXpcnDeoNOLQ2")
-    );
+    const q = query(collection(db, dbGroup), where("creatorId", "==", userId));
 
     const querySnapshot = await getDocs(q);
 
