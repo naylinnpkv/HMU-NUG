@@ -1,6 +1,7 @@
 import { DocumentData } from "firebase/firestore";
 
 export interface ITicketData {
+  id?: string;
   name: string;
   startingTicketNum: number;
   endingTicketNum: number;
@@ -9,6 +10,11 @@ export interface ITicketData {
   country: string;
   creatorId: string;
 }
+
+export type IDeletedTicketData = ITicketData & {
+  creatorName: string;
+  ticketGroup: "10$" | "25$";
+};
 
 export interface ICountrySales {
   country: string;
