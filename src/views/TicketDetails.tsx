@@ -20,9 +20,12 @@ const TicketDetails: React.FC = () => {
 
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+  const isAdmin = currentUser?.admin;
 
   const getTickets = async (db: "10$" | "25$") => {
+    if (!currentUser) return;
     const data = await getSale(db, currentUser?.userId);
+
     setTickets(data);
   };
 
@@ -31,7 +34,6 @@ const TicketDetails: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!currentUser) return;
     getTickets(ticketGroup);
   }, [currentUser, ticketGroup]);
 
@@ -70,7 +72,12 @@ const TicketDetails: React.FC = () => {
           <Radio value={"25$"}>25$ Tickets</Radio>
         </Radio.Group>
       </div>
-      <TicketDetailsTable tickets={tickets} />
+      <TicketDetailsTable
+        tickets={tickets}
+        isAdmin={isAdmin === true}
+        ticketGroup={ticketGroup}
+        setTickets={setTickets}
+      />
     </div>
   );
 };

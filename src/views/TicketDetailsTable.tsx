@@ -1,24 +1,46 @@
-import { ITicketData } from "../models";
+import { IDeletedTicketData, ITicketData } from "../models";
 import "../statics/_ticket-details.css";
 import _ from "lodash";
-import { DeleteOutlined } from "@ant-design/icons";
-import { Button, Modal, Tooltip } from "antd";
+import { DeleteFilled } from "@ant-design/icons";
+import { Button, Modal } from "antd";
 import { useState } from "react";
+import { addToDeletedTickets } from "../services/ticketService";
 import type { RadioChangeEvent } from "antd";
 import { Radio } from "antd";
 
 export const TicketDetailsTable: React.FC<{
   tickets: ITicketData[];
-}> = ({ tickets }) => {
+  ticketGroup: "10$" | "25$";
+  isAdmin: boolean;
+  setTickets: React.Dispatch<React.SetStateAction<ITicketData[]>>;
+}> = ({ tickets, setTickets, ticketGroup, isAdmin }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [targetedTicket, setTargetedTicket] = useState<ITicketData | null>(
     null
   );
 
-  const deleteHandler = (ticket: ITicketData) => {
+  const deleteModalHandler = (ticket: ITicketData) => {
     setTargetedTicket(ticket);
     setIsOpen(true);
     return;
+  };
+
+  const deleteHandler = async () => {
+    if (!targetedTicket) return;
+    try {
+      const data: IDeletedTicketData = { ...targetedTicket, ticketGroup };
+      await addToDeletedTickets(
+        data,
+        ticketGroup === "10$" ? "10$tickets" : "25$tickets"
+      );
+      setTickets((prev) =>
+        prev.filter((ticket) => ticket.id === targetedTicket.id)
+      );
+    } catch (e) {
+      console.log(e, "Error deleting the ticket");
+    } finally {
+      setIsOpen(false);
+    }
   };
 
   const cancelHandler = () => {
@@ -51,7 +73,7 @@ export const TicketDetailsTable: React.FC<{
               <th style={{ width: "300px" }}>Name</th>
               <th style={{ width: "200px" }}>Country</th>
               <th>Contact</th>
-              {/* <th>Delete</th> */}
+              {/* {isAdmin && <th style={{ width: "75px" }}>Delete</th>} */}
             </tr>
           </thead>
           <tbody>
@@ -82,13 +104,15 @@ export const TicketDetailsTable: React.FC<{
                   </Tooltip> */}
                     {ticket.contact}
                   </td>
-                  {/* <td style={{ textAlign: "center" }}>
-                  <Button
-                    type="ghost"
-                    onClick={() => deleteHandler(ticket)}
-                    icon={<DeleteOutlined style={{ color: "red" }} />}
-                  />
-                </td> */}
+                  {/* {isAdmin && (
+                    <td style={{ textAlign: "center", width: "75px" }}>
+                      <Button
+                        type="text"
+                        onClick={() => deleteModalHandler(ticket)}
+                        icon={<DeleteFilled style={{ color: "red" }} />}
+                      />
+                    </td>
+                  )} */}
                 </tr>
               ))
             )}
@@ -96,9 +120,9 @@ export const TicketDetailsTable: React.FC<{
         </table>
       </div>
       <Modal
-        title={<DeleteOutlined style={{ color: "red" }} />}
+        title={<DeleteFilled style={{ color: "red" }} />}
         visible={isOpen}
-        onOk={() => console.log("OK")}
+        onOk={deleteHandler}
         confirmLoading={false}
         onCancel={cancelHandler}
       >
