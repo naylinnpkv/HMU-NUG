@@ -12,7 +12,6 @@ export interface ITicketData {
 }
 
 export type IDeletedTicketData = ITicketData & {
-  creatorName: string;
   ticketGroup: "10$" | "25$";
 };
 

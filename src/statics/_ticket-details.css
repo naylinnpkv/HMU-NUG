@@ -6,7 +6,8 @@
 
 /* Basic table styling */
 table {
-  width: 100%;
+  width: 90%;
+  margin: auto;
   border-collapse: collapse;
   table-layout: fixed; /* Helps with sticky header */
 }

@@ -1,5 +1,7 @@
 import {
   getDocs,
+  doc,
+  deleteDoc,
   query,
   collection,
   where,
@@ -28,11 +30,28 @@ export const createTicket = async (
   }
 };
 
-export const addToDeletedTickets = async (ticketData: IDeletedTicketData) => {
+export const removeTicket = async (
+  ticketId: string,
+  ticketGroup: "10$tickets" | "25$tickets"
+) => {
   try {
-    if (!ticketData.creatorName) return;
+    const ticketRef = doc(db, ticketGroup, ticketId);
+
+    await deleteDoc(ticketRef);
+  } catch (e) {
+    console.error(e, "Error removing ticket");
+  }
+};
+
+export const addToDeletedTickets = async (
+  ticketData: IDeletedTicketData,
+  ticketGroup: "10$tickets" | "25$tickets"
+) => {
+  try {
+    if (!ticketData.ticketGroup || !ticketData.id) return;
     const docRef = await addDoc(collection(db, "deletedTickets"), ticketData);
     const docSnap = await getDoc(docRef);
+    await removeTicket(ticketData.id, ticketGroup);
     if (docSnap.exists()) {
       return docSnap.data();
     }
