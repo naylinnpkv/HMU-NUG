@@ -24,7 +24,7 @@ export const Ticket: React.FC<{ ticketType: string }> = ({ ticketType }) => {
   const [agentName, setAgentName] = useState<number>(0);
   const [isMultiple, setIsMultiple] = useState<boolean>(true);
   const [isJapan, setIsJapan] = useState<boolean>(false);
-  const [nums, setNums] = useState<number>(5);
+  const [nums, setNums] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
   const [is10$ticket, setIs10$ticket] = useState<boolean>(
     ticketType.length > 0 && ticketType !== "is25$ticket"
@@ -169,23 +169,15 @@ export const Ticket: React.FC<{ ticketType: string }> = ({ ticketType }) => {
           />
           <div className="formWrapper">
             <span>
-              <Checkbox
+              {/* <Checkbox
                 checked={isMultiple}
                 onChange={() => setIsMultiple(!isMultiple)}
               >
                 Print Multiple Tickets
-              </Checkbox>
-              {isMultiple && (
-                <input
-                  type="number"
-                  placeholder="Number of Tickets"
-                  value={nums}
-                  onChange={(e) => {
-                    setNums(_.toNumber(e.currentTarget.value));
-                  }}
-                />
-              )}
+              </Checkbox> */}
+              {/* {isMultiple && ( */}
 
+              {/* )} */}
               {/* // temporarily removing the Japan ticket 
               <Checkbox checked={isJapan} onChange={() => setIsJapan(!isJapan)}>
                 Japan Agent
@@ -200,6 +192,15 @@ export const Ticket: React.FC<{ ticketType: string }> = ({ ticketType }) => {
 
             <div className="ticket-input">
               <div className="formInputWrapper">
+                <p>Number of Tickets:</p>
+                <input
+                  type="number"
+                  placeholder="Number of Tickets"
+                  value={nums}
+                  onChange={(e) => {
+                    setNums(_.toNumber(e.currentTarget.value));
+                  }}
+                />
                 <p>Ticket Number:</p>
                 {ticketNumber && isMultiple ? (
                   <input

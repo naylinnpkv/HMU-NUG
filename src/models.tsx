@@ -11,6 +11,13 @@ export interface ITicketData {
   creatorId: string;
 }
 
+export interface IUserSalesData {
+  userId: string;
+  name: string;
+  numberOfTicketsSold10$: number;
+  numberOfTicketsSold25$: number;
+}
+
 export type IDeletedTicketData = ITicketData & {
   ticketGroup: "10$" | "25$";
 };

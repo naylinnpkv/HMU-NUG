@@ -96,6 +96,35 @@ export const getSale = async (
   }
 };
 
+export const getAllSaleCount10$ = async () => {
+  try {
+    const q = query(collection(db, "10$tickets"));
+    const querySnapshot = await getDocs(q);
+    const data = querySnapshot.docs.reduce(
+      (total, doc) => total + (doc.data().numberofTickets || 0),
+      0
+    );
+
+    return data;
+  } catch (e) {
+    console.error("Error Fetching All Sales", e);
+  }
+};
+
+export const getAllSaleCount25$ = async () => {
+  try {
+    const q = query(collection(db, "25$tickets"));
+    const querySnapshot = await getDocs(q);
+    const data = querySnapshot.docs.reduce(
+      (total, doc) => total + (doc.data().numberofTickets || 0),
+      0
+    );
+    return data;
+  } catch (e) {
+    console.error("Error Fetching All Sales", e);
+  }
+};
+
 export const getLastEndingTicketNum = async (
   ticketGroup: "25$" | "10$"
 ): Promise<number | null> => {
