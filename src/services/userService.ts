@@ -8,6 +8,7 @@ import {
   limit,
 } from "firebase/firestore";
 import { db, auth } from "../../firebase";
+import { IUserSalesData } from "../models";
 
 export const createUser = async (userData: {
   userId: string;
@@ -43,5 +44,61 @@ export const createUser = async (userData: {
     }
   } else {
     console.error("No authenticated user");
+  }
+};
+
+export const getUserTicketSales = async (): Promise<IUserSalesData[]> => {
+  try {
+    // Fetch all users
+    const usersQuery = query(collection(db, "users"));
+    const usersSnapshot = await getDocs(usersQuery);
+
+    const userSalesData: IUserSalesData[] = [];
+
+    // Loop through each user to count their ticket sales
+    for (const userDoc of usersSnapshot.docs) {
+      const userData = userDoc.data() as { userId: string; name: string };
+
+      // Fetch 10$ tickets created by this user
+      const ticketsQuery10$ = query(
+        collection(db, "10$tickets"),
+        where("creatorId", "==", userData.userId)
+      );
+      const ticketsSnapshot10$ = await getDocs(ticketsQuery10$);
+      const numberOfTicketsSold10$ = ticketsSnapshot10$.docs.reduce(
+        (total, doc) => total + (doc.data().numberofTickets || 0),
+        0
+      );
+
+      // Fetch 25$ tickets created by this user
+      const ticketsQuery25$ = query(
+        collection(db, "25$tickets"),
+        where("creatorId", "==", userData.userId)
+      );
+      const ticketsSnapshot25$ = await getDocs(ticketsQuery25$);
+      const numberOfTicketsSold25$ = ticketsSnapshot25$.docs.reduce(
+        (total, doc) => total + (doc.data().numberofTickets || 0),
+        0
+      );
+
+      // Step 5: Push the result to the userSalesData array
+      if (
+        userData.name !== "Nay Linn" &&
+        userData.name !== "Kathir Pkv" &&
+        userData.name !== "HMU NUG"
+      ) {
+        userSalesData.push({
+          userId: userData.userId,
+          name: userData.name,
+          numberOfTicketsSold10$,
+          numberOfTicketsSold25$,
+        });
+      }
+    }
+
+    return userSalesData;
+  } catch (e) {
+    console.error("Error fetching user ticket sales:", e);
+    return [];
   }
 };

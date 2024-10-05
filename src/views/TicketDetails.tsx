@@ -4,13 +4,14 @@ import React, { useEffect, useState } from "react";
 import { ITicketData } from "../models";
 import "../statics/_ticket-details.css";
 import _ from "lodash";
-import { Space, Table, Tag } from "antd";
+import { Spin } from "antd";
 import type { TableProps } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getSale } from "../services/ticketService";
 import { TicketDetailsTable } from "./TicketDetailsTable";
+import AllSale from "./AllSale";
 
 const TicketDetails: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -22,20 +23,14 @@ const TicketDetails: React.FC = () => {
   const navigate = useNavigate();
   const isAdmin = currentUser?.admin;
 
-  const getTickets = async (db: "10$" | "25$") => {
-    if (!currentUser) return;
-    const data = await getSale(db, currentUser?.userId);
-
-    setTickets(data);
-  };
-
-  const onChange = (e: RadioChangeEvent) => {
+  const onChange = async (e: RadioChangeEvent) => {
     setTicketGroup(e.target.value);
+    setLoading(true);
+    if (!currentUser) return;
+    const data = await getSale(e.target.value, currentUser?.userId);
+    setTickets(data);
+    setLoading(false);
   };
-
-  useEffect(() => {
-    getTickets(ticketGroup);
-  }, [currentUser, ticketGroup]);
 
   return (
     <div className="container">
@@ -72,12 +67,18 @@ const TicketDetails: React.FC = () => {
           <Radio value={"25$"}>25$ Tickets</Radio>
         </Radio.Group>
       </div>
-      <TicketDetailsTable
-        tickets={tickets}
-        isAdmin={isAdmin === true}
-        ticketGroup={ticketGroup}
-        setTickets={setTickets}
-      />
+      {loading ? (
+        <Spin style={{ marginTop: 20 }} />
+      ) : (
+        <TicketDetailsTable
+          tickets={tickets}
+          isAdmin={isAdmin === true}
+          ticketGroup={ticketGroup}
+          setTickets={setTickets}
+        />
+      )}
+
+      {currentUser?.admin && <AllSale />}
     </div>
   );
 };
