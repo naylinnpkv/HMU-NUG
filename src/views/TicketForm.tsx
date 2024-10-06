@@ -178,10 +178,15 @@ export const Ticket: React.FC<{ ticketType: string }> = ({ ticketType }) => {
               {/* {isMultiple && ( */}
 
               {/* )} */}
-              {/* // temporarily removing the Japan ticket 
-              <Checkbox checked={isJapan} onChange={() => setIsJapan(!isJapan)}>
-                Japan Agent
-              </Checkbox> */}
+
+              {is10$ticket && (
+                <Checkbox
+                  checked={isJapan}
+                  onChange={() => setIsJapan(!isJapan)}
+                >
+                  Japan Agent
+                </Checkbox>
+              )}
               {/* <Checkbox
                 checked={is10$ticket}
                 onChange={() => setIs10$ticket(!is10$ticket)}

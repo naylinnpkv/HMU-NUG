@@ -2,6 +2,7 @@ import React from "react";
 
 import Diwali_2024 from "../statics/2024_MHU_Diwali.jpg";
 import Diwali_2024_10$ from "../statics/2024_MHU_DIWALI_10$.jpg";
+import Japan_ticket from "../statics/2024_MHU_Japan.jpg";
 
 export const TicketImage: React.FC<{
   isMultiple: boolean;
@@ -30,7 +31,9 @@ export const TicketImage: React.FC<{
     <div className="head-image" style={{ maxWidth: "768px" }} ref={printRef}>
       <p className="in-the-ticket-region">{onImageTicketNum}</p>
       <img
-        src={is10$ticket ? Diwali_2024_10$ : Diwali_2024}
+        src={
+          is10$ticket ? (isJapan ? Japan_ticket : Diwali_2024_10$) : Diwali_2024
+        }
         alt="Raffle"
         className="ticket"
       />

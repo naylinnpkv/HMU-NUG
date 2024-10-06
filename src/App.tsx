@@ -5,7 +5,6 @@ import { useAuth } from "./context/AuthContext";
 import mhu_logo from "./statics/mhu_logo.png";
 import { Button } from "antd";
 import { GoogleOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
 
 function App() {
   const { currentUser, signInWithGoogle } = useAuth();
